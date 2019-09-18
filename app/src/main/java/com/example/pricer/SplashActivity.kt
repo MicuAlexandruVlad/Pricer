@@ -1,5 +1,6 @@
 package com.example.pricer
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.animation.AlphaAnimation
@@ -38,9 +39,9 @@ class SplashActivity : AppCompatActivity() {
             }
 
             override fun onAnimationEnd(p0: Animation?) {
-
+                val intent = Intent(this@SplashActivity, WelcomeActivity::class.java)
+                startActivity(intent)
             }
-
         })
     }
 }

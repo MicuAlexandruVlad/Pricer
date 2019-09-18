@@ -3,4 +3,10 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#429EA6</color>
     <color name="colorAccent">#00CA9D</color>
+
+    <color name="facebook">#376FA3</color>
+    <color name="googleBlue">#518EF8</color>
+    <color name="googleRed">#F14336</color>
+    <color name="googleGreen">#28B446</color>
+    <color name="googleYellow">#FBBB00</color>
 </resources>
