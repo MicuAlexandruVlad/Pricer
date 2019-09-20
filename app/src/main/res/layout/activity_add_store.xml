@@ -1,0 +1,729 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_white"
+    android:fillViewport="true"
+    tools:context=".AddStoreActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:animateLayoutChanges="true"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_title"
+            android:textSize="@dimen/title_size"
+            android:textColor="@color/md_black"
+            android:textStyle="bold"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:text="Store registration"
+            tools:ignore="HardcodedText" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/met_store_name"
+            android:hint="Ex: Walmart"
+            android:inputType="textCapSentences"
+            android:layout_below="@id/tv_title"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Store name"
+            app:met_iconLeft="@drawable/store"
+            tools:ignore="HardcodedText" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/met_store_description"
+            android:inputType="textMultiLine"
+            android:hint="Description (optional)"
+            android:layout_below="@id/met_store_name"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Store description"
+            app:met_iconLeft="@drawable/description"
+            tools:ignore="HardcodedText" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/met_store_country"
+            android:hint="Country"
+            android:inputType="textCapWords"
+            android:layout_below="@id/met_store_description"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Store country"
+            app:met_iconLeft="@drawable/country"
+            tools:ignore="HardcodedText" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/met_store_city"
+            android:hint="City"
+            android:inputType="textCapWords"
+            android:layout_below="@id/met_store_country"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Store city"
+            app:met_iconLeft="@drawable/city"
+            tools:ignore="HardcodedText" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rl_store_state"
+            android:layout_below="@id/met_store_city"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="16dp"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_in_us"
+                android:textSize="16sp"
+                android:textColor="@color/md_black"
+                android:text="Is this store in USA ?"
+                android:layout_centerVertical="true"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/cb_in_us"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                />
+
+        </RelativeLayout>
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/met_store_state"
+            android:visibility="gone"
+            android:hint="State"
+            android:inputType="textCapSentences"
+            android:layout_below="@id/rl_store_state"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Store state"
+            app:met_iconLeft="@drawable/state"
+            tools:ignore="HardcodedText" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/met_store_zip"
+            android:hint="Zip code"
+            android:inputType="number"
+            android:layout_below="@id/met_store_state"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Store zip code"
+            app:met_iconLeft="@drawable/zip_code"
+            tools:ignore="HardcodedText" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/met_store_phone_number"
+            android:hint="Phone number (optional)"
+            android:inputType="phone"
+            android:layout_below="@id/met_store_zip"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Store phone number"
+            app:met_iconLeft="@drawable/phone"
+            tools:ignore="HardcodedText" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rl_store_schedule"
+            android:layout_below="@id/met_store_phone_number"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="60dp"
+            >
+
+            <TextView
+                android:id="@+id/tv_store_schedule"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="12dp"
+                android:layout_toStartOf="@+id/cb_schedule"
+                android:text="Do you know the schedule for this store ?"
+                android:textColor="@color/md_black"
+                android:textSize="16sp"
+                tools:ignore="HardcodedText" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/cb_schedule"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rl_schedule"
+            android:layout_below="@id/rl_store_schedule"
+            android:layout_marginTop="8dp"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_monday"
+                android:text="Monday"
+                android:layout_marginStart="16dp"
+                android:textSize="16sp"
+                android:textColor="@color/md_black"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rl_schedule_monday"
+                android:layout_below="@id/tv_monday"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                >
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/met_monday_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/tv_dash_1"
+                    android:hint="Start"
+                    android:letterSpacing=".5"
+                    app:met_textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    android:inputType="time"
+                    android:textAlignment="center"
+                    android:layout_marginEnd="12dp"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="Start"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:id="@+id/tv_dash_1"
+                    android:textSize="16sp"
+                    android:textColor="@color/md_black"
+                    android:textStyle="bold"
+                    android:layout_centerInParent="true"
+                    tools:ignore="HardcodedText" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/met_monday_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:letterSpacing=".5"
+                    android:textAlignment="center"
+                    app:met_textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@+id/tv_dash_1"
+                    android:hint="End"
+                    android:inputType="time"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="End"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_tuesday"
+                android:layout_below="@id/rl_schedule_monday"
+                android:text="Tuesday"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="16dp"
+                android:textSize="16sp"
+                android:textColor="@color/md_black"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rl_schedule_tuesday"
+                android:layout_below="@id/tv_tuesday"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                >
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/met_tuesday_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/tv_dash_2"
+                    android:hint="Start"
+                    android:letterSpacing=".5"
+                    app:met_textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    android:inputType="time"
+                    android:textAlignment="center"
+                    android:layout_marginEnd="12dp"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="Start"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:id="@+id/tv_dash_2"
+                    android:textSize="16sp"
+                    android:textColor="@color/md_black"
+                    android:textStyle="bold"
+                    android:layout_centerInParent="true"
+                    tools:ignore="HardcodedText" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/met_tuesday_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:letterSpacing=".5"
+                    android:textAlignment="center"
+                    app:met_textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@+id/tv_dash_2"
+                    android:hint="End"
+                    android:inputType="time"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="End"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_wednesday"
+                android:layout_below="@id/rl_schedule_tuesday"
+                android:text="Wednesday"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="16dp"
+                android:textSize="16sp"
+                android:textColor="@color/md_black"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rl_schedule_wednesday"
+                android:layout_below="@id/tv_wednesday"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                >
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/met_wednesday_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/tv_dash_3"
+                    android:hint="Start"
+                    android:letterSpacing=".5"
+                    app:met_textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    android:inputType="time"
+                    android:textAlignment="center"
+                    android:layout_marginEnd="12dp"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="Start"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:id="@+id/tv_dash_3"
+                    android:textSize="16sp"
+                    android:textColor="@color/md_black"
+                    android:textStyle="bold"
+                    android:layout_centerInParent="true"
+                    tools:ignore="HardcodedText" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/met_wednesday_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:letterSpacing=".5"
+                    android:textAlignment="center"
+                    app:met_textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@+id/tv_dash_3"
+                    android:hint="End"
+                    android:inputType="time"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="End"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_thursday"
+                android:layout_below="@id/rl_schedule_wednesday"
+                android:text="Thursday"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="16dp"
+                android:textSize="16sp"
+                android:textColor="@color/md_black"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rl_schedule_thursday"
+                android:layout_below="@id/tv_thursday"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                >
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/met_thursday_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/tv_dash_4"
+                    android:hint="Start"
+                    android:letterSpacing=".5"
+                    app:met_textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    android:inputType="time"
+                    android:textAlignment="center"
+                    android:layout_marginEnd="12dp"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="Start"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:id="@+id/tv_dash_4"
+                    android:textSize="16sp"
+                    android:textColor="@color/md_black"
+                    android:textStyle="bold"
+                    android:layout_centerInParent="true"
+                    tools:ignore="HardcodedText" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/met_thursday_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:letterSpacing=".5"
+                    android:textAlignment="center"
+                    app:met_textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@+id/tv_dash_4"
+                    android:hint="End"
+                    android:inputType="time"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="End"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_friday"
+                android:layout_below="@id/rl_schedule_thursday"
+                android:text="Friday"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="16dp"
+                android:textSize="16sp"
+                android:textColor="@color/md_black"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rl_schedule_friday"
+                android:layout_below="@id/tv_friday"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                >
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/met_friday_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/tv_dash_5"
+                    android:hint="Start"
+                    android:letterSpacing=".5"
+                    app:met_textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    android:inputType="time"
+                    android:textAlignment="center"
+                    android:layout_marginEnd="12dp"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="Start"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:id="@+id/tv_dash_5"
+                    android:textSize="16sp"
+                    android:textColor="@color/md_black"
+                    android:textStyle="bold"
+                    android:layout_centerInParent="true"
+                    tools:ignore="HardcodedText" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/met_friday_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:letterSpacing=".5"
+                    android:textAlignment="center"
+                    app:met_textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@+id/tv_dash_5"
+                    android:hint="End"
+                    android:inputType="time"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="End"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_saturday"
+                android:layout_below="@id/rl_schedule_friday"
+                android:text="Saturday"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="16dp"
+                android:textSize="16sp"
+                android:textColor="@color/md_black"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rl_schedule_saturday"
+                android:layout_below="@id/tv_saturday"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                >
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/met_saturday_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/tv_dash_6"
+                    android:hint="Start"
+                    android:letterSpacing=".5"
+                    app:met_textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    android:inputType="time"
+                    android:textAlignment="center"
+                    android:layout_marginEnd="12dp"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="Start"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:id="@+id/tv_dash_6"
+                    android:textSize="16sp"
+                    android:textColor="@color/md_black"
+                    android:textStyle="bold"
+                    android:layout_centerInParent="true"
+                    tools:ignore="HardcodedText" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/met_saturday_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:letterSpacing=".5"
+                    android:textAlignment="center"
+                    app:met_textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@+id/tv_dash_6"
+                    android:hint="End"
+                    android:inputType="time"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="End"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_sunday"
+                android:layout_below="@id/rl_schedule_saturday"
+                android:text="Sunday"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="16dp"
+                android:textSize="16sp"
+                android:textColor="@color/md_black"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rl_schedule_sunday"
+                android:layout_below="@id/tv_sunday"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                >
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/met_sunday_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/tv_dash_7"
+                    android:hint="Start"
+                    android:letterSpacing=".5"
+                    app:met_textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    android:inputType="time"
+                    android:textAlignment="center"
+                    android:layout_marginEnd="12dp"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="Start"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:id="@+id/tv_dash_7"
+                    android:textSize="16sp"
+                    android:textColor="@color/md_black"
+                    android:textStyle="bold"
+                    android:layout_centerInParent="true"
+                    tools:ignore="HardcodedText" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/met_sunday_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:letterSpacing=".5"
+                    android:textAlignment="center"
+                    app:met_textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@+id/tv_dash_7"
+                    android:hint="End"
+                    android:inputType="time"
+                    app:met_floatingLabel="highlight"
+                    app:met_floatingLabelText="End"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_add_store"
+            android:text="Add store"
+            android:textSize="16sp"
+            android:textColor="@color/md_white"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/btn_semi_round_dark"
+            android:elevation="12dp"
+            android:layout_marginTop="24dp"
+            tools:ignore="HardcodedText" />
+
+    </RelativeLayout>
+
+</ScrollView>

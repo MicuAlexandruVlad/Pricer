@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Pricer</string>
+    <string name="add_store_message">If you can\'t find your store add it by pressing the Add button below</string>
 </resources>

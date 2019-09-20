@@ -1,18 +1,23 @@
 package com.example.pricer
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class StoresFragment : Fragment() {
 
     companion object {
         const val TAG = "StoresFragment"
     }
+
+    private lateinit var changeFragment: ImageView
+    private lateinit var searchStore: FloatingActionButton
 
     private lateinit var bundle: Bundle
     private lateinit var currentUser: User
@@ -29,11 +34,21 @@ class StoresFragment : Fragment() {
 
         bindViews(view)
 
+        changeFragment.setOnClickListener {
+            parentPager.setCurrentItem(1, true)
+        }
+
+        searchStore.setOnClickListener {
+            val intent = Intent(context, SearchStoreActivity::class.java)
+            startActivityForResult(intent, RequestCodes.SEARCH_STORE_REQ_CODE)
+        }
 
         return view
     }
 
     private fun bindViews(view: View) {
         parentPager = activity!!.findViewById(R.id.pager)
+        changeFragment = view.findViewById(R.id.iv_forward)
+        searchStore = view.findViewById(R.id.fab_search_store)
     }
 }
