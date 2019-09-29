@@ -5,5 +5,6 @@ class RequestCodes {
         const val SIGN_UP_REQ_CODE = 1
         const val SEARCH_STORE_REQ_CODE = 2
         const val ADD_STORE_REQ_CODE = 3
+        const val GALLERY_REQ_CODE = 4
     }
 }

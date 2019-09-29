@@ -8,6 +8,7 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.Toast
 import com.example.pricer.events.RegisterEvent
+import com.example.pricer.types.ObjectType
 import com.google.android.material.textfield.TextInputEditText
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.RequestParams
@@ -98,15 +99,17 @@ class SignUpActivity : AppCompatActivity() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRegisterEvent(registerEvent: RegisterEvent) {
-        if (registerEvent.status == HttpStatus.SC_CREATED) {
-            Toast.makeText(this, "Account created", Toast.LENGTH_SHORT).show()
-            user.id = registerEvent.id
-            val parentIntent = intent
-            parentIntent.putExtra("user", user)
-            setResult(Activity.RESULT_OK, parentIntent)
-            finish()
+        if (registerEvent.objType == ObjectType.OBJ_USER) {
+            if (registerEvent.status == HttpStatus.SC_CREATED) {
+                Toast.makeText(this, "Account created", Toast.LENGTH_SHORT).show()
+                user.id = registerEvent.id
+                val parentIntent = intent
+                parentIntent.putExtra("user", user)
+                setResult(Activity.RESULT_OK, parentIntent)
+                finish()
+            }
+            else
+                Toast.makeText(this, "Account already exists", Toast.LENGTH_SHORT).show()
         }
-        else
-            Toast.makeText(this, "Account already exists", Toast.LENGTH_SHORT).show()
     }
 }
