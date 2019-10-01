@@ -2,9 +2,11 @@ package com.example.pricer
 
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import com.example.pricer.events.RegisterEvent
-import com.example.pricer.types.ObjectType
+import com.example.pricer.constants.Actions
+import com.example.pricer.constants.DBLinks
+import com.example.pricer.constants.ObjectType
+import com.example.pricer.events.GetResponseEvent
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.JsonHttpResponseHandler
 import com.loopj.android.http.RequestParams
@@ -41,14 +43,14 @@ class ApiCalls {
                         val registerEvent = RegisterEvent()
                         registerEvent.status = status
                         registerEvent.id = id
-                        EventBus.getDefault().post(registerEvent)
+                        emitRegisterEvent(registerEvent)
                     }
                     else {
                         val registerEvent = RegisterEvent()
                         registerEvent.status = status
                         registerEvent.id = ""
                         registerEvent.objType = ObjectType.OBJ_USER
-                        EventBus.getDefault().post(registerEvent)
+                        emitRegisterEvent(registerEvent)
                     }
                 }
 
@@ -64,7 +66,7 @@ class ApiCalls {
             })
         }
 
-        fun registerStore(context: Context, store: Store, storeImageData: String) {
+        fun registerStore(context: Context, store: Store, storeImageSmData: String, storeImageLgData: String) {
             val client = AsyncHttpClient()
             val params = RequestParams()
 
@@ -73,6 +75,7 @@ class ApiCalls {
             params.put("storeName", store.storeName)
             params.put("storeCity", store.storeCity)
             params.put("storeCountry", store.storeCountry)
+            params.put("storeStreet", store.storeStreet)
             params.put("storeDescription", store.storeDescription)
             params.put("storePhone", store.storePhone)
             params.put("storeState", store.storeState)
@@ -94,6 +97,36 @@ class ApiCalls {
                     response: JSONObject?
                 ) {
                     super.onSuccess(statusCode, headers, response)
+
+                    val status = response!!.getInt("status")
+
+                    Log.d(TAG, "registerStore: Status -> $status")
+
+                    when (status) {
+                        HttpStatus.SC_CREATED -> {
+                            // store has been created
+                            val id = response.getString("id")
+
+                            val registerEvent = RegisterEvent()
+                            registerEvent.status = status
+                            registerEvent.id = id
+                            registerEvent.objType = ObjectType.OBJ_STORE
+                            registerEvent.action = Actions.STORE_UPLOADED
+                            emitRegisterEvent(registerEvent)
+
+                            uploadStoreImage(context, storeImageSmData, storeImageLgData, id)
+                        }
+
+                        HttpStatus.SC_CONFLICT -> {
+                            // store already exists
+
+                            val registerEvent = RegisterEvent()
+                            registerEvent.status = status
+                            registerEvent.id = ""
+                            registerEvent.objType = ObjectType.OBJ_STORE
+                            emitRegisterEvent(registerEvent)
+                        }
+                    }
                 }
 
                 override fun onFailure(
@@ -106,6 +139,90 @@ class ApiCalls {
                     Log.d(TAG, errorResponse.toString())
                 }
             })
+        }
+
+        fun uploadStoreImage(context: Context, storeImageSmData: String, storeImageLgData: String, storeId: String) {
+            val client = AsyncHttpClient()
+            val params = RequestParams()
+
+            params.put("storeId", storeId)
+            params.put("storeImageSmData", storeImageSmData)
+            params.put("storeImageLgData", storeImageLgData)
+
+            client.post(DBLinks.uploadStoreImage, params, object : JsonHttpResponseHandler() {
+                override fun onSuccess(
+                    statusCode: Int,
+                    headers: Array<out Header>?,
+                    response: JSONObject?
+                ) {
+                    super.onSuccess(statusCode, headers, response)
+
+                    val status = response!!.getInt("status")
+
+                    val registerEvent = RegisterEvent()
+                    registerEvent.status = status
+                    if (status == HttpStatus.SC_CREATED) {
+                        registerEvent.id = response.getString("id")
+                    } else {
+                        registerEvent.id = ""
+                    }
+                    registerEvent.action = Actions.STORE_IMAGE_UPLOADED
+                    emitRegisterEvent(registerEvent)
+                }
+
+                override fun onFailure(
+                    statusCode: Int,
+                    headers: Array<out Header>?,
+                    throwable: Throwable?,
+                    errorResponse: JSONObject?
+                ) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse)
+                }
+            })
+        }
+
+        fun searchStoreBrand(context: Context, brandName: String) {
+            val client = AsyncHttpClient()
+            val params = RequestParams()
+
+            params.put("storeBrandKeyword", brandName)
+
+            client.get(DBLinks.searchStore, params, object : JsonHttpResponseHandler() {
+                override fun onSuccess(
+                    statusCode: Int,
+                    headers: Array<out Header>?,
+                    response: JSONObject?
+                ) {
+                    super.onSuccess(statusCode, headers, response)
+
+                    val status = response!!.getInt("status")
+                    val res = response.getJSONArray("result")
+
+                    val getResponseEvent = GetResponseEvent()
+                    getResponseEvent.objType = ObjectType.OBJ_STORE_BRAND
+                    getResponseEvent.status = status
+                    getResponseEvent.jsonResponseArray = res
+
+                    emitGetResponseEvent(getResponseEvent)
+                }
+
+                override fun onFailure(
+                    statusCode: Int,
+                    headers: Array<out Header>?,
+                    throwable: Throwable?,
+                    errorResponse: JSONObject?
+                ) {
+                    super.onFailure(statusCode, headers, throwable, errorResponse)
+                }
+            })
+        }
+
+        private fun emitRegisterEvent(registerEvent: RegisterEvent) {
+            EventBus.getDefault().post(registerEvent)
+        }
+
+        private fun emitGetResponseEvent(getResponseEvent: GetResponseEvent) {
+            EventBus.getDefault().post(getResponseEvent)
         }
     }
 }

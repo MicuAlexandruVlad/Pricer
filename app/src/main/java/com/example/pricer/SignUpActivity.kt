@@ -8,10 +8,8 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.Toast
 import com.example.pricer.events.RegisterEvent
-import com.example.pricer.types.ObjectType
+import com.example.pricer.constants.ObjectType
 import com.google.android.material.textfield.TextInputEditText
-import com.loopj.android.http.AsyncHttpClient
-import com.loopj.android.http.RequestParams
 import cz.msebera.android.httpclient.HttpStatus
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

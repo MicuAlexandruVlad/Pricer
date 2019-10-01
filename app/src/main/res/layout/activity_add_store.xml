@@ -89,11 +89,26 @@
             app:met_iconLeft="@drawable/city"
             tools:ignore="HardcodedText" />
 
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/met_store_street"
+            android:hint="Street"
+            android:inputType="textPostalAddress"
+            android:layout_below="@id/met_store_city"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:met_floatingLabel="highlight"
+            app:met_floatingLabelText="Store street"
+            app:met_iconLeft="@drawable/address"
+            tools:ignore="HardcodedText" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/rl_store_state"
-            android:layout_below="@id/met_store_city"
+            android:layout_below="@id/met_store_street"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="12dp"
             android:layout_marginStart="16dp"
@@ -743,6 +758,7 @@
                 android:src="@drawable/add_image"
                 android:scaleType="centerCrop"
                 android:tint="@color/colorAccent"
+                android:padding="80dp"
                 />
 
         </androidx.cardview.widget.CardView>

@@ -4,4 +4,5 @@ class RegisterEvent {
     var id: String = ""
     var status: Int = -1
     var objType: Int = -1
+    var action: Int = -1
 }

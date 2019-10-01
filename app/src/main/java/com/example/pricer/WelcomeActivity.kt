@@ -1,7 +1,6 @@
 package com.example.pricer
 
 import android.app.Activity
-import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,6 +9,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.example.pricer.constants.RequestCodes
 import com.google.android.material.textfield.TextInputEditText
 
 class WelcomeActivity : AppCompatActivity() {
@@ -61,6 +61,7 @@ class WelcomeActivity : AppCompatActivity() {
 
         signUp.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
+
             startActivityForResult(intent, RequestCodes.SIGN_UP_REQ_CODE)
         }
     }

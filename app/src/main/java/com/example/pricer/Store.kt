@@ -8,6 +8,7 @@ class Store {
     var storeDescription: String = ""
     var storeCountry: String = ""
     var storeCity: String = ""
+    var storeStreet: String = ""
     var storeState: String = ""
     var storeZip: String = ""
     var storePhone: String = ""

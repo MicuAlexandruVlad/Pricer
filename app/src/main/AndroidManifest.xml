@@ -17,7 +17,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddStoreActivity"/>
+        <activity android:name=".StoreBrandListActivity"></activity>
+        <activity android:name=".AddProductActivity" />
+        <activity android:name=".AddStoreActivity" />
         <activity android:name=".SearchStoreActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".SignUpActivity" />
@@ -29,15 +31,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.mydomain.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
-            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/paths"/>
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/paths" />
         </provider>
-
     </application>
 
 </manifest>

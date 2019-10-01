@@ -11,12 +11,18 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.pricer.constants.Actions
 import com.example.pricer.dialogs.ImageLoaderDialog
-import com.loopj.android.http.AsyncHttpClient
+import com.example.pricer.events.RegisterEvent
+import com.example.pricer.constants.ObjectType
+import com.example.pricer.constants.RequestCodes
 import com.loopj.android.http.Base64
-import com.loopj.android.http.RequestParams
 import com.rengwuxian.materialedittext.MaterialEditText
+import cz.msebera.android.httpclient.HttpStatus
 import org.apache.commons.io.output.ByteArrayOutputStream
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 class AddStoreActivity : AppCompatActivity() {
@@ -28,6 +34,7 @@ class AddStoreActivity : AppCompatActivity() {
     private lateinit var storeDescription: MaterialEditText
     private lateinit var storeCountry: MaterialEditText
     private lateinit var storeCity: MaterialEditText
+    private lateinit var storeStreet: MaterialEditText
     private lateinit var inUsa: CheckBox
     private lateinit var storeState: MaterialEditText
     private lateinit var storeZip: MaterialEditText
@@ -55,13 +62,19 @@ class AddStoreActivity : AppCompatActivity() {
     private lateinit var buttonOriginalParams: RelativeLayout.LayoutParams
     private var hasImage: Boolean = false
     private lateinit var currentUser: User
-    private var galleryEncodedImage: String = ""
+    private var galleryEncodedImageLg: String = ""
+    private var galleryEncodedImageSm: String = ""
+    private var imageCompressing: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_store)
 
+        EventBus.getDefault().register(this)
+
         bindViews()
+
+        currentUser = intent.getSerializableExtra("currentUser") as User
 
         buttonOriginalParams = addStore.layoutParams as RelativeLayout.LayoutParams
         // placeButton()
@@ -109,11 +122,12 @@ class AddStoreActivity : AppCompatActivity() {
             store.storeName = storeName.text.toString()
             store.storeCity = storeCity.text.toString()
             store.storeCountry = storeCountry.text.toString()
+            store.storeStreet = storeStreet.text.toString()
             store.storeDescription = storeDescription.text.toString()
             store.storePhone = storePhone.text.toString()
             store.storeState = storeState.text.toString()
-            store.hasSchedule = storeScheduleKnown.isChecked
             store.isInUsa = inUsa.isChecked
+            store.hasSchedule = storeScheduleKnown.isChecked
 
             val builder = StringBuilder()
             builder.append(storeScheduleMondayStart.text.toString())
@@ -152,7 +166,15 @@ class AddStoreActivity : AppCompatActivity() {
             store.lastEditedById = currentUser.id
             store.lastEditedByName = currentUser.lastName + " " + currentUser.firstName
 
-            ApiCalls.registerStore(this@AddStoreActivity, store, galleryEncodedImage)
+            if (imageCompressing) {
+                Toast.makeText(
+                    this,
+                    "Image compression in progress. Please wait.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                ApiCalls.registerStore(this@AddStoreActivity, store, galleryEncodedImageSm, galleryEncodedImageLg)
+            }
 
         }
     }
@@ -189,6 +211,7 @@ class AddStoreActivity : AppCompatActivity() {
         storeDescription = findViewById(R.id.met_store_description)
         storeCountry = findViewById(R.id.met_store_country)
         storeCity = findViewById(R.id.met_store_city)
+        storeStreet = findViewById(R.id.met_store_street)
         inUsa = findViewById(R.id.cb_in_us)
         storeState = findViewById(R.id.met_store_state)
         storeZip = findViewById(R.id.met_store_zip)
@@ -249,6 +272,7 @@ class AddStoreActivity : AppCompatActivity() {
         Log.d(TAG, "onActivityResult")
         if (requestCode == RequestCodes.GALLERY_REQ_CODE && resultCode == Activity.RESULT_OK) {
             hasImage = true
+            addImage.setPadding(0, 0, 0, 0)
             val uri = data!!.data
             addImage.imageTintList = null
 
@@ -259,22 +283,85 @@ class AddStoreActivity : AppCompatActivity() {
             // Log.d(TAG, "File path -> " + file.absolutePath)
 
             Thread {
-                galleryEncodedImage = encodeImage(bmp)
-                Log.d(TAG, galleryEncodedImage)
+                runOnUiThread {
+                    Toast.makeText(this, "Image compression in progress...", Toast.LENGTH_SHORT).show()
+                }
+                imageCompressing = true
+
+                galleryEncodedImageLg = encodeImage(bmp, false)
+                galleryEncodedImageSm = encodeImage(bmp, true)
+
+                imageCompressing = false
+                runOnUiThread {
+                    Toast.makeText(this, "Image compression is finished", Toast.LENGTH_SHORT).show()
+                }
             }.start()
         }
     }
 
-    private fun encodeImage(bmp: Bitmap): String {
-        return Base64.encodeToString(bitmapToByteArray(bmp), Base64.DEFAULT)
+    private fun encodeImage(bmp: Bitmap, resize: Boolean): String {
+        return Base64.encodeToString(bitmapToByteArray(bmp, resize), Base64.DEFAULT)
     }
 
-    private fun bitmapToByteArray(bmp: Bitmap): ByteArray {
+    private fun bitmapToByteArray(bmp: Bitmap, resize: Boolean): ByteArray {
         val stream = ByteArrayOutputStream()
-        bmp.compress(Bitmap.CompressFormat.PNG, 40, stream)
+        Log.d(TAG, "Original bmp byte count -> " + bmp.byteCount)
+        Log.d(TAG, "Original bmp width -> " + bmp.width)
+        Log.d(TAG, "Original bmp height -> " + bmp.height)
+        if (resize) {
+            var bmpSm = Bitmap.createScaledBitmap(bmp, bmp.width / 5,
+                bmp.height / 5, false)
+            bmpSm.compress(Bitmap.CompressFormat.JPEG, 60, stream)
+
+            Log.d(TAG, "Resized bmp byte count -> " + bmpSm.byteCount)
+            Log.d(TAG, "Resized bmp width -> " + bmpSm.width)
+            Log.d(TAG, "Resized bmp height -> " + bmpSm.height)
+        } else {
+            val streamLg = ByteArrayOutputStream()
+            var bmpLg = bmp
+            Log.d(TAG, "image byte count before loop -> " + bmpLg.byteCount)
+            Log.d(TAG, "image height before loop -> " + bmpLg.height)
+            while (bmpLg.width * bmpLg.height > 3686400) {
+                bmpLg = Bitmap.createScaledBitmap(bmpLg, (bmpLg.width / 1.7).toInt(),
+                    (bmpLg.height / 1.7).toInt(), false)
+            }
+
+            Log.d(TAG, "image byte count after loop -> " + bmpLg.byteCount)
+            Log.d(TAG, "image height after loop -> " + bmpLg.height)
+
+            bmpLg.compress(Bitmap.CompressFormat.JPEG, 40, streamLg)
+
+            val byteArray = streamLg.toByteArray()
+            Log.d(TAG, "resized byte array size -> " + byteArray.size)
+            // resizedBmp.recycle()
+
+            return byteArray
+        }
         val byteArray = stream.toByteArray()
-        bmp.recycle()
+        // bmp.recycle()
 
         return byteArray
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRegisterEvent(registerEvent: RegisterEvent) {
+        if (registerEvent.objType == ObjectType.OBJ_STORE
+            && registerEvent.action == Actions.STORE_UPLOADED) {
+            when (registerEvent.status) {
+                HttpStatus.SC_CREATED -> {
+                    Toast.makeText(this, "Store has been uploaded", Toast.LENGTH_SHORT).show()
+                }
+
+                HttpStatus.SC_CONFLICT -> {
+                    Toast.makeText(this, "Store already exists", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy")
+        EventBus.getDefault().unregister(this)
     }
 }

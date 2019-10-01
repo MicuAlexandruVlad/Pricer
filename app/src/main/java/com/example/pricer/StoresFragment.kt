@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
+import com.example.pricer.constants.RequestCodes
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class StoresFragment : Fragment() {
@@ -40,6 +41,7 @@ class StoresFragment : Fragment() {
 
         searchStore.setOnClickListener {
             val intent = Intent(context, SearchStoreActivity::class.java)
+            intent.putExtra("currentUser", currentUser)
             startActivityForResult(intent, RequestCodes.SEARCH_STORE_REQ_CODE)
         }
 
