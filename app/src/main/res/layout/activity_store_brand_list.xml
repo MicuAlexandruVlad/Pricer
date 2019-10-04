@@ -62,7 +62,14 @@
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/rv_store_brand"
+            android:id="@+id/rv_store_brand_initial"
+            android:layout_marginTop="24dp"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rv_store_brand_search"
             android:layout_marginTop="24dp"
             />
 

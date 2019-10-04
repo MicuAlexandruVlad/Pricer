@@ -187,7 +187,7 @@ class ApiCalls {
 
             params.put("storeBrandKeyword", brandName)
 
-            client.get(DBLinks.searchStore, params, object : JsonHttpResponseHandler() {
+            client.get(DBLinks.searchStoreGroupName, params, object : JsonHttpResponseHandler() {
                 override fun onSuccess(
                     statusCode: Int,
                     headers: Array<out Header>?,
@@ -213,6 +213,35 @@ class ApiCalls {
                     errorResponse: JSONObject?
                 ) {
                     super.onFailure(statusCode, headers, throwable, errorResponse)
+                }
+            })
+        }
+
+        fun searchStoreByCountry(context: Context, brandName: String) {
+            val client = AsyncHttpClient()
+            val params = RequestParams()
+
+            params.put("storeBrandKeyword", brandName)
+
+            client.get(DBLinks.searchStoreGroupCountry, params, object : JsonHttpResponseHandler() {
+                override fun onSuccess(
+                    statusCode: Int,
+                    headers: Array<out Header>?,
+                    response: JSONObject?
+                ) {
+                    super.onSuccess(statusCode, headers, response)
+
+                    val status = response!!.getInt("status")
+                    val res = response.getJSONArray("result")
+
+                    Log.d(TAG, "searchStoreByCountry: response -> $response")
+
+                    val getResponseEvent = GetResponseEvent()
+                    getResponseEvent.objType = ObjectType.OBJ_COUNTRY
+                    getResponseEvent.status = status
+                    getResponseEvent.jsonResponseArray = res
+
+                    emitGetResponseEvent(getResponseEvent)
                 }
             })
         }

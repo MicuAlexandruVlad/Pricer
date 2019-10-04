@@ -8,5 +8,8 @@ class RequestCodes {
         const val GALLERY_REQ_CODE = 4
         const val ADD_PRODUCT_REQ_CODE = 5
         const val STORE_LIST_REQ_CODE = 6
+        const val CATEGORY_LIST_REQ_CODE = 7
+        const val SUB_CATEGORY_LIST_REQ_CODE = 8
+        const val COUNTRY_LIST_REQ_CODE = 9
     }
 }

@@ -1,6 +1,8 @@
 package com.example.pricer
 
-class StoreBrand {
+import java.io.Serializable
+
+class StoreBrand : Serializable {
     var name: String = ""
     var initial: String = ""
 
