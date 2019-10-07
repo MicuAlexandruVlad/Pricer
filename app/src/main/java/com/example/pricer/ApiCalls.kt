@@ -246,6 +246,36 @@ class ApiCalls {
             })
         }
 
+        fun searchStoreByCity(context: Context, brandName: String, countryName: String) {
+            val client = AsyncHttpClient()
+            val params = RequestParams()
+
+            params.put("storeBrandKeyword", brandName)
+            params.put("storeCountry", countryName)
+
+            client.get(DBLinks.searchStoreGroupCity, params, object : JsonHttpResponseHandler() {
+                override fun onSuccess(
+                    statusCode: Int,
+                    headers: Array<out Header>?,
+                    response: JSONObject?
+                ) {
+                    super.onSuccess(statusCode, headers, response)
+
+                    val status = response!!.getInt("status")
+                    val res = response.getJSONArray("result")
+
+                    Log.d(TAG, "searchStoreByCity: response -> $response")
+
+                    val getResponseEvent = GetResponseEvent()
+                    getResponseEvent.objType = ObjectType.OBJ_CITY
+                    getResponseEvent.status = status
+                    getResponseEvent.jsonResponseArray = res
+
+                    emitGetResponseEvent(getResponseEvent)
+                }
+            })
+        }
+
         private fun emitRegisterEvent(registerEvent: RegisterEvent) {
             EventBus.getDefault().post(registerEvent)
         }

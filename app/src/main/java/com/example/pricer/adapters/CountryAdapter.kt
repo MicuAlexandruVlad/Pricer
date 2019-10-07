@@ -43,11 +43,11 @@ class CountryAdapter(private var countries: ArrayList<Country>,
         Glide.with(context).load(country.countryFlag).into(holder.flag)
 
         holder.parent.setOnClickListener {
-            val intent = Intent(context, SubCategoryListActivity::class.java)
+            val intent = Intent(context, CityListActivity::class.java)
             intent.putExtra("currentUser", currentUser)
             intent.putExtra("country", country.countryName)
             intent.putExtra("storeBrand", storeBrand)
-            (context as Activity).startActivityForResult(intent, RequestCodes.SUB_CATEGORY_LIST_REQ_CODE)
+            (context as Activity).startActivityForResult(intent, RequestCodes.CITY_LIST_REQ_CODE)
         }
     }
 

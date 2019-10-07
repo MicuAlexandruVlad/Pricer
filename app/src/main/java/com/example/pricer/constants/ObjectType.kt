@@ -6,5 +6,6 @@ class ObjectType {
         const val OBJ_STORE = 1
         const val OBJ_STORE_BRAND = 2
         const val OBJ_COUNTRY = 3
+        const val OBJ_CITY = 4
     }
 }

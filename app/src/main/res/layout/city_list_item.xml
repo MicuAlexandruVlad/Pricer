@@ -4,20 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
     android:paddingTop="4dp"
     android:paddingBottom="4dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:id="@+id/rl_city_parent"
     android:clipToPadding="false"
-    android:id="@+id/rl_store_brand_parent"
     >
 
     <androidx.cardview.widget.CardView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:backgroundTint="@color/colorPrimary"
-        app:cardCornerRadius="30dp"
-        android:id="@+id/cv_store_initial"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:backgroundTint="@color/colorPrimaryDark"
+        app:cardCornerRadius="26dp"
+        android:id="@+id/cv_city_initial"
         android:layout_centerVertical="true"
         >
 
@@ -29,8 +29,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tv_store_brand_initial"
-                tools:text="W"
+                android:id="@+id/tv_city_initial"
+                tools:text="B"
+                android:textStyle="bold"
                 android:layout_centerInParent="true"
                 android:textColor="@color/md_white"
                 android:textSize="22sp"
@@ -44,13 +45,13 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tv_store_brand_name"
-        android:layout_toEndOf="@id/cv_store_initial"
+        android:id="@+id/tv_city_name"
+        android:layout_toEndOf="@id/cv_city_initial"
         android:layout_centerVertical="true"
-        tools:text="Walmart"
+        tools:text="Bucharest"
         android:textSize="20sp"
         android:textColor="@color/md_black"
-        android:textStyle="bold"
+        android:textStyle="normal"
         android:layout_marginStart="24dp"
         />
 

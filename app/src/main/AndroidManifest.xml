@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CountryListActivity"></activity>
+        <activity android:name=".CityListActivity"></activity>
+        <activity android:name=".CountryListActivity" />
         <activity android:name=".SubCategoryListActivity" />
         <activity android:name=".CategoryListActivity" />
         <activity android:name=".StoreBrandListActivity" />

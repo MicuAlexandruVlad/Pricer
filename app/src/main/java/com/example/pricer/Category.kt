@@ -30,7 +30,7 @@ class Category: Serializable {
             list.add("Boys' Fashion")
             list.add("Health and Household")
             list.add("Home and Kitchen")
-            list.add("Industrial and Scientific")
+            list.add("Industrial & Scientific")
             list.add("Luggage")
             list.add("Movies & TV")
             list.add("Software")
@@ -666,17 +666,21 @@ class Category: Serializable {
                 }
 
                 "Home and Kitchen" -> {
-                    list.add("Baby & Child Care")
-                    list.add("Health Care")
-                    list.add("Household Supplies")
-                    list.add("Oral Care")
-                    list.add("Personal Care")
-                    list.add("Sexual Wellness")
-                    list.add("Sports Nutrition")
-                    list.add("Stationery & Gift Wrapping Supplies")
-                    list.add("Vision Care")
-                    list.add("Vitamins & Supplements")
-                    list.add("Wellness & Relaxation")
+                    list.add("Kids' Home Store")
+                    list.add("Kitchen & Dining")
+                    list.add("Bedding")
+                    list.add("Bath")
+                    list.add("Furniture")
+                    list.add("Home Decor")
+                    list.add("Wall Art")
+                    list.add("Lighting & Ceiling Fans")
+                    list.add("Event & Party Supplies")
+                    list.add("Heating, Cooling & Air Quality")
+                    list.add("Irons & Steamers")
+                    list.add("Vacuums & Floor Care")
+                    list.add("Storage & Organization")
+                    list.add("Cleaning Supplies")
+
 
                     for (s in list) {
                         val subCategory = Category()
@@ -684,27 +688,437 @@ class Category: Serializable {
                         subCategory.categoryName = s
                         when (s) {
                             list[0] -> subCategory.imageDrawable =
-                                ContextCompat.getDrawable(context, R.drawable.baby_care)
+                                ContextCompat.getDrawable(context, R.drawable.lamp)
                             list[1] -> subCategory.imageDrawable =
-                                ContextCompat.getDrawable(context, R.drawable.health)
+                                ContextCompat.getDrawable(context, R.drawable.kitchen_dining)
                             list[2] -> subCategory.imageDrawable =
-                                ContextCompat.getDrawable(context, R.drawable.roll)
+                                ContextCompat.getDrawable(context, R.drawable.bed)
                             list[3] -> subCategory.imageDrawable =
-                                ContextCompat.getDrawable(context, R.drawable.toothbrush)
+                                ContextCompat.getDrawable(context, R.drawable.bathtub)
                             list[4] -> subCategory.imageDrawable =
-                                ContextCompat.getDrawable(context, R.drawable.skin_care)
+                                ContextCompat.getDrawable(context, R.drawable.furniture)
                             list[5] -> subCategory.imageDrawable =
-                                ContextCompat.getDrawable(context, R.drawable.condoms)
+                                ContextCompat.getDrawable(context, R.drawable.wall_art)
                             list[6] -> subCategory.imageDrawable =
-                                ContextCompat.getDrawable(context, R.drawable.fork)
+                                ContextCompat.getDrawable(context, R.drawable.wall_art)
                             list[7] -> subCategory.imageDrawable =
-                                ContextCompat.getDrawable(context, R.drawable.baby_stationery)
+                                ContextCompat.getDrawable(context, R.drawable.lighting)
                             list[8] -> subCategory.imageDrawable =
-                                ContextCompat.getDrawable(context, R.drawable.drop)
+                                ContextCompat.getDrawable(context, R.drawable.confetti)
                             list[9] -> subCategory.imageDrawable =
-                                ContextCompat.getDrawable(context, R.drawable.vitamin_pill)
+                                ContextCompat.getDrawable(context, R.drawable.ac)
                             list[10] -> subCategory.imageDrawable =
-                                ContextCompat.getDrawable(context, R.drawable.aromatherapy)
+                                ContextCompat.getDrawable(context, R.drawable.iron)
+                            list[11] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.vacuum)
+                            list[12] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.storage)
+                            list[13] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.cleaning)
+                        }
+                        subCategories.add(subCategory)
+                    }
+                }
+
+                "Industrial & Scientific" -> {
+                    list.add("Abrasive & Finishing Products")
+                    list.add("Additive Manufacturing Products")
+                    list.add("Commercial Door Products")
+                    list.add("Cutting Tools")
+                    list.add("Fasteners")
+                    list.add("Filtration")
+                    list.add("Food Service Equipment & Supplies")
+                    list.add("Hydraulics, Pneumatics & Plumbing")
+                    list.add("Industrial Electrical")
+                    list.add("Industrial Hardware")
+                    list.add("Industrial Power & Hand Tools")
+                    list.add("Janitorial & Sanitation Supplies")
+                    list.add("Lab & Scientific Products")
+                    list.add("Material Handling Products")
+                    list.add("Occupational Health & Safety Products")
+                    list.add("Packaging & Shipping Supplies")
+                    list.add("Power Transmission Supplies")
+                    list.add("Professional Dental Supplies")
+                    list.add("Professional Medical Supplies")
+                    list.add("Raw Materials")
+                    list.add("Retail Store Fixtures & Equipment")
+                    list.add("Robotics")
+                    list.add("Science Education")
+                    list.add("Tapes, Adhesives & Sealants")
+                    list.add("Test, Measure & Inspect")
+
+                    for (s in list) {
+                        val subCategory = Category()
+                        subCategory.isSubCategory = true
+                        subCategory.categoryName = s
+                        when (s) {
+                            list[0] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.sandpaper)
+                            list[1] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.printing_filament)
+                            list[2] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.door_products)
+                            list[3] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.handyman_tools)
+                            list[4] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.nails)
+                            list[5] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.filtration)
+                            list[6] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.paper_towel)
+                            list[7] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.hose)
+                            list[8] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.sensor)
+                            list[9] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.hanger)
+                            list[10] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.driller)
+                            list[11] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.paper_roll)
+                            list[12] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.microscope)
+                            list[13] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.shelves)
+                            list[14] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.ear_plug)
+                            list[15] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.duct_tape)
+                            list[16] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.gear)
+                            list[17] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.professional_dental_care)
+                            list[18] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.bandaid)
+                            list[19] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.raw_materials)
+                            list[20] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.shopping_bag)
+                            list[21] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.robotics)
+                            list[22] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.book)
+                            list[23] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.tape)
+                            list[24] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.ruler)
+                        }
+                        subCategories.add(subCategory)
+                    }
+                }
+
+                "Luggage" -> {
+                    list.add("Carry-ons")
+                    list.add("Backpacks")
+                    list.add("Garment Bags")
+                    list.add("Travel Totes")
+                    list.add("Luggage Sets")
+                    list.add("Laptop Bags")
+                    list.add("Suitcases")
+                    list.add("Kids Luggage")
+                    list.add("Messenger Bags")
+                    list.add("Umbrellas")
+                    list.add("Sport Bags")
+                    list.add("Travel Accessories")
+
+
+                    for (s in list) {
+                        val subCategory = Category()
+                        subCategory.isSubCategory = true
+                        subCategory.categoryName = s
+                        when (s) {
+                            list[0] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.luggage)
+                            list[1] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.backpack)
+                            list[2] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.garment_bag)
+                            list[3] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.travel_totes)
+                            list[4] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.travel_sets)
+                            list[5] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.laptop_bag)
+                            list[6] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.suitcase)
+                            list[7] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.kids_luggage)
+                            list[8] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.messenger_bag)
+                            list[9] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.umbrella)
+                            list[10] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.sport_bag)
+                            list[11] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.travel_accessories)
+                        }
+                        subCategories.add(subCategory)
+                    }
+                }
+
+                "Movies & TV" -> {
+                    list.add("Movies")
+                    list.add("TV Shows")
+                    list.add("Blu-ray")
+                    list.add("Ultra HD")
+
+
+
+                    for (s in list) {
+                        val subCategory = Category()
+                        subCategory.isSubCategory = true
+                        subCategory.categoryName = s
+                        when (s) {
+                            list[0] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.movie)
+                            list[1] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.tv_show)
+                            list[2] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.blu_ray)
+                            list[3] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.uhd)
+                        }
+                        subCategories.add(subCategory)
+                    }
+                }
+
+                "Software" -> {
+                    list.add("Accounting & Finance")
+                    list.add("Antivirus & Security")
+                    list.add("Business & Office")
+                    list.add("Design & Illustration")
+                    list.add("Education")
+                    list.add("Games")
+                    list.add("Music")
+                    list.add("Operating Systems")
+                    list.add("Photography")
+                    list.add("Programming & Web Development")
+                    list.add("Tax Preparation")
+                    list.add("Utilities")
+                    list.add("Video")
+
+
+
+                    for (s in list) {
+                        val subCategory = Category()
+                        subCategory.isSubCategory = true
+                        subCategory.categoryName = s
+                        when (s) {
+                            list[0] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.finance)
+                            list[1] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.security)
+                            list[2] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.business)
+                            list[3] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.design)
+                            list[4] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.education)
+                            list[5] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.console)
+                            list[6] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.music)
+                            list[7] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.windows)
+                            list[8] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.photography)
+                            list[9] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.code)
+                            list[10] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.tax)
+                            list[11] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.pdf)
+                            list[12] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.movies)
+                        }
+                        subCategories.add(subCategory)
+                    }
+                }
+
+                "Tools & Home Improvement" -> {
+                    list.add("Tools & Home Improvement")
+                    list.add("Appliances")
+                    list.add("Building Supplies")
+                    list.add("Electrical")
+                    list.add("Hardware")
+                    list.add("Kitchen & Bath Fixtures")
+                    list.add("Light Bulbs")
+                    list.add("Lighting & Ceiling Fans")
+                    list.add("Measuring & Layout Tools")
+                    list.add("Painting Supplies & Wall Treatments")
+                    list.add("Power & Hand Tools")
+                    list.add("Rough Plumbing")
+                    list.add("Safety & Security")
+                    list.add("Storage & Home Organization")
+                    list.add("Welding & Soldering")
+
+
+                    for (s in list) {
+                        val subCategory = Category()
+                        subCategory.isSubCategory = true
+                        subCategory.categoryName = s
+                        when (s) {
+                            list[0] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.handyman_tools)
+                            list[1] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.washing_machine)
+                            list[2] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.duct_tape)
+                            list[3] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.plug)
+                            list[4] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.rope)
+                            list[5] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.filtration)
+                            list[6] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.lighting)
+                            list[7] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.lamp)
+                            list[8] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.ruler)
+                            list[9] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.paint_palette)
+                            list[10] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.driller)
+                            list[11] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.pipe)
+                            list[12] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.security)
+                            list[13] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.shelves)
+                            list[14] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.welding)
+                        }
+                        subCategories.add(subCategory)
+                    }
+                }
+
+                "Toys and Games" -> {
+                    list.add("Action Figures & Statues")
+                    list.add("Arts & Crafts")
+                    list.add("Baby & Toddler Toys")
+                    list.add("Building Toys")
+                    list.add("Dolls & Accessories")
+                    list.add("Dress Up")
+                    list.add("Kids' Electronics")
+                    list.add("Games")
+                    list.add("Grown-up Toys")
+                    list.add("Hobbies")
+                    list.add("Kids' Furniture, Decor & Storage")
+                    list.add("Learning & Education")
+                    list.add("Party Supplies")
+                    list.add("Puppets")
+                    list.add("Puzzles")
+                    list.add("Sports & Outdoor Play")
+                    list.add("Plush Toys")
+                    list.add("Tricycles, Scooters & Wagons")
+
+
+                    for (s in list) {
+                        val subCategory = Category()
+                        subCategory.isSubCategory = true
+                        subCategory.categoryName = s
+                        when (s) {
+                            list[0] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.statue)
+                            list[1] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.arts)
+                            list[2] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.baby_toy)
+                            list[3] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.block)
+                            list[4] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.doll)
+                            list[5] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.dino)
+                            list[6] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.robotics)
+                            list[7] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.monopoly)
+                            list[8] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.casino)
+                            list[9] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.rc_car)
+                            list[10] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.furniture)
+                            list[11] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.study)
+                            list[12] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.confetti)
+                            list[13] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.puppet)
+                            list[14] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.puzzle)
+                            list[15] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.football)
+                            list[16] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.plush_toy)
+                            list[17] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.tricycle)
+                        }
+                        subCategories.add(subCategory)
+                    }
+                }
+
+                "Video Games" -> {
+                    list.add("Video Games")
+                    list.add("PlayStation 4")
+                    list.add("PlayStation 3")
+                    list.add("Xbox One")
+                    list.add("Xbox 360")
+                    list.add("Nintendo Switch")
+                    list.add("Wii U")
+                    list.add("Wii")
+                    list.add("PC")
+                    list.add("Mac")
+                    list.add("Nintendo 3DS & 2DS")
+                    list.add("Nintendo DS")
+                    list.add("PlayStation Vita")
+                    list.add("Sony PSP")
+                    list.add("Retro Gaming & Microconsoles")
+                    list.add("Accessories")
+                    list.add("Digital Games")
+
+
+                    for (s in list) {
+                        val subCategory = Category()
+                        subCategory.isSubCategory = true
+                        subCategory.categoryName = s
+                        when (s) {
+                            list[0] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.video_games)
+                            list[1] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.ps4)
+                            list[2] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.ps3)
+                            list[3] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.xbox_one)
+                            list[4] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.xbox_360)
+                            list[5] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.nintendo_switch)
+                            list[6] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.wii_u)
+                            list[7] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.wii)
+                            list[8] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.pc)
+                            list[9] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.mac)
+                            list[10] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.nintendo_3ds)
+                            list[11] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.nintendo_ds)
+                            list[12] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.ps_vita)
+                            list[13] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.psp)
+                            list[14] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.retro_console)
+                            list[15] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.console)
+                            list[16] -> subCategory.imageDrawable =
+                                ContextCompat.getDrawable(context, R.drawable.digital_games)
                         }
                         subCategories.add(subCategory)
                     }

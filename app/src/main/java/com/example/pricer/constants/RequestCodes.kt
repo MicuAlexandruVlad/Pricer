@@ -11,5 +11,6 @@ class RequestCodes {
         const val CATEGORY_LIST_REQ_CODE = 7
         const val SUB_CATEGORY_LIST_REQ_CODE = 8
         const val COUNTRY_LIST_REQ_CODE = 9
+        const val CITY_LIST_REQ_CODE = 10
     }
 }
