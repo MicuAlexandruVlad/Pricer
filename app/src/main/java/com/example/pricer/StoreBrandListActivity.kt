@@ -1,25 +1,20 @@
 package com.example.pricer
 
-import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.rengwuxian.materialedittext.MaterialEditText
 import android.view.inputmethod.EditorInfo
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
 import android.util.Log
-import android.view.KeyEvent
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pricer.adapters.StoreBrandAdapter
 import com.example.pricer.constants.ObjectType
 import com.example.pricer.events.GetResponseEvent
-import com.example.pricer.events.RegisterEvent
+import com.example.pricer.models.StoreBrand
+import com.example.pricer.models.User
 import cz.msebera.android.httpclient.HttpStatus
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

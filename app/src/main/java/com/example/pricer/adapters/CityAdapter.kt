@@ -12,13 +12,18 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pricer.*
 import com.example.pricer.constants.RequestCodes
+import com.example.pricer.models.City
+import com.example.pricer.models.Country
+import com.example.pricer.models.StoreBrand
+import com.example.pricer.models.User
 
 class CityAdapter(private var cities: ArrayList<City>,
                   private var context: Context,
-                  private var currentUser: User) : RecyclerView.Adapter<CityAdapter.ViewHolder>() {
+                  private var currentUser: User
+) : RecyclerView.Adapter<CityAdapter.ViewHolder>() {
 
     companion object {
-        const val TAG = "StoreBrandAdapter"
+        const val TAG = "CityAdapter"
     }
 
     var storeBrand: StoreBrand? = null
@@ -41,12 +46,12 @@ class CityAdapter(private var cities: ArrayList<City>,
         holder.cityInitial.text = city.initial
         holder.cityName.text = city.name
         holder.parent.setOnClickListener {
-            val intent = Intent(context, CategoryListActivity::class.java)
+            val intent = Intent(context, StoreSearchActivity::class.java)
             intent.putExtra("currentUser", currentUser)
-            intent.putExtra("city", city)
-            intent.putExtra("country", country)
+            intent.putExtra("city", city.name)
+            intent.putExtra("country", country!!.countryName)
             intent.putExtra("storeBrand", storeBrand)
-            (context as Activity).startActivityForResult(intent, RequestCodes.CATEGORY_LIST_REQ_CODE)
+            (context as Activity).startActivityForResult(intent, RequestCodes.FOUND_STORES_REQ_CODE)
         }
     }
 

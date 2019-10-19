@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.pricer.constants.RequestCodes
+import com.example.pricer.models.User
 import com.google.android.material.textfield.TextInputEditText
 
 class WelcomeActivity : AppCompatActivity() {

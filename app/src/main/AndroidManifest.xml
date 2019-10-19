@@ -15,9 +15,11 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:usesCleartextTraffic="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CityListActivity"></activity>
+        <activity android:name=".StoreSearchActivity"></activity>
+        <activity android:name=".CityListActivity" />
         <activity android:name=".CountryListActivity" />
         <activity android:name=".SubCategoryListActivity" />
         <activity android:name=".CategoryListActivity" />

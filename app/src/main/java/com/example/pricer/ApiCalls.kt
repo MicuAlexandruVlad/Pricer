@@ -7,6 +7,8 @@ import com.example.pricer.constants.Actions
 import com.example.pricer.constants.DBLinks
 import com.example.pricer.constants.ObjectType
 import com.example.pricer.events.GetResponseEvent
+import com.example.pricer.models.Store
+import com.example.pricer.models.User
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.JsonHttpResponseHandler
 import com.loopj.android.http.RequestParams
@@ -102,31 +104,29 @@ class ApiCalls {
 
                     Log.d(TAG, "registerStore: Status -> $status")
 
+                    val registerEvent = RegisterEvent()
+                    registerEvent.status = status
+                    registerEvent.objType = ObjectType.OBJ_STORE
+
                     when (status) {
                         HttpStatus.SC_CREATED -> {
                             // store has been created
                             val id = response.getString("id")
 
-                            val registerEvent = RegisterEvent()
-                            registerEvent.status = status
                             registerEvent.id = id
-                            registerEvent.objType = ObjectType.OBJ_STORE
                             registerEvent.action = Actions.STORE_UPLOADED
-                            emitRegisterEvent(registerEvent)
+
 
                             uploadStoreImage(context, storeImageSmData, storeImageLgData, id)
                         }
 
                         HttpStatus.SC_CONFLICT -> {
                             // store already exists
-
-                            val registerEvent = RegisterEvent()
-                            registerEvent.status = status
                             registerEvent.id = ""
-                            registerEvent.objType = ObjectType.OBJ_STORE
-                            emitRegisterEvent(registerEvent)
                         }
                     }
+
+                    emitRegisterEvent(registerEvent)
                 }
 
                 override fun onFailure(
@@ -274,6 +274,42 @@ class ApiCalls {
                     emitGetResponseEvent(getResponseEvent)
                 }
             })
+        }
+
+        fun fetchStores(context: Context, storeName: String, countryName: String, cityName: String, stateName: String) {
+            val client = AsyncHttpClient()
+            val params = RequestParams()
+
+            params.put("storeName", storeName)
+            params.put("storeCountry", countryName)
+            params.put("storeCity", cityName)
+            params.put("storeState", stateName)
+
+            client.get(DBLinks.storeSearch, params, object : JsonHttpResponseHandler() {
+                override fun onSuccess(
+                    statusCode: Int,
+                    headers: Array<out Header>?,
+                    response: JSONObject?
+                ) {
+                    super.onSuccess(statusCode, headers, response)
+
+                    val status = response!!.getInt("status")
+
+                    val getResponseEvent = GetResponseEvent()
+                    getResponseEvent.status = status
+                    getResponseEvent.objType = ObjectType.OBJ_STORE
+                    getResponseEvent.action = Actions.STORE_SEARCH
+
+                    when (status) {
+                        HttpStatus.SC_OK -> {
+                            getResponseEvent.jsonResponseArray = response.getJSONArray("result")
+                        }
+                    }
+
+                    emitGetResponseEvent(getResponseEvent)
+                }
+            })
+
         }
 
         private fun emitRegisterEvent(registerEvent: RegisterEvent) {

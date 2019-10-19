@@ -14,13 +14,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.pricer.*
 import com.example.pricer.constants.RequestCodes
+import com.example.pricer.models.Country
+import com.example.pricer.models.StoreBrand
+import com.example.pricer.models.User
 
 class CountryAdapter(private var countries: ArrayList<Country>,
                      private var context: Context,
-                     private var currentUser: User) : RecyclerView.Adapter<CountryAdapter.ViewHolder>() {
+                     private var currentUser: User
+) : RecyclerView.Adapter<CountryAdapter.ViewHolder>() {
 
     companion object {
-        const val TAG = "CategoryAdapter"
+        const val TAG = "CountryAdapter"
     }
 
     var storeBrand = StoreBrand()

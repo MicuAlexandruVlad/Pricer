@@ -1,4 +1,4 @@
-package com.example.pricer
+package com.example.pricer.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,7 +8,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.viewpager.widget.ViewPager
+import com.example.pricer.R
+import com.example.pricer.StoreBrandListActivity
 import com.example.pricer.constants.RequestCodes
+import com.example.pricer.models.User
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class ProductsFragment : Fragment() {

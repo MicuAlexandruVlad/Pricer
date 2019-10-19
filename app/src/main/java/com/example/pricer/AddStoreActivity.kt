@@ -16,6 +16,8 @@ import com.example.pricer.dialogs.ImageLoaderDialog
 import com.example.pricer.events.RegisterEvent
 import com.example.pricer.constants.ObjectType
 import com.example.pricer.constants.RequestCodes
+import com.example.pricer.models.Store
+import com.example.pricer.models.User
 import com.loopj.android.http.Base64
 import com.rengwuxian.materialedittext.MaterialEditText
 import cz.msebera.android.httpclient.HttpStatus

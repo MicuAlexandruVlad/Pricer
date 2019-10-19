@@ -1,4 +1,4 @@
-package com.example.pricer
+package com.example.pricer.models
 
 import java.io.Serializable
 

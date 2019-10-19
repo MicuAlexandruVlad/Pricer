@@ -10,13 +10,15 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.pricer.*
 import com.example.pricer.constants.RequestCodes
+import com.example.pricer.models.StoreBrand
+import com.example.pricer.models.User
 
 class StoreBrandAdapter(private var storeBrands: ArrayList<StoreBrand>,
                         private var context: Context,
-                        private var currentUser: User) : RecyclerView.Adapter<StoreBrandAdapter.ViewHolder>() {
+                        private var currentUser: User
+) : RecyclerView.Adapter<StoreBrandAdapter.ViewHolder>() {
 
     companion object {
         const val TAG = "StoreBrandAdapter"

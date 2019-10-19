@@ -10,6 +10,16 @@ class DBLinks {
         const val searchStoreGroupCountry: String = baseLink + "stores/search-store-brand-group-country/"
         const val searchStoreGroupCity: String = baseLink + "stores/search-store-brand-group-city/"
         const val searchStoreGroupState: String = baseLink + "stores/search-store-brand-group-state/"
+        const val searchStoreGroupStreet: String = baseLink + "stores/search-store-brand-group-street/"
         const val storeBrands: String = baseLink + "stores/search-brands/"
+        const val storeSearch: String = baseLink + "stores/store-search/"
+
+        fun storeImageLargeUrl(storeId: String, storeImageId: String): String {
+            return baseLink + "store-images/store-image-large/$storeId/images/$storeImageId/"
+        }
+
+        fun storeImageSmallUrl(storeId: String, storeImageId: String): String {
+            return baseLink + "store-images/store-image-small/$storeId/images/$storeImageId/"
+        }
     }
 }

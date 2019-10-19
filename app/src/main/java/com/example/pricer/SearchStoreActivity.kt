@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.pricer.constants.RequestCodes
+import com.example.pricer.models.User
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class SearchStoreActivity : AppCompatActivity() {

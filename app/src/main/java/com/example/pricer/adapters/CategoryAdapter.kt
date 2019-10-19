@@ -14,16 +14,25 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.pricer.*
 import com.example.pricer.constants.RequestCodes
+import com.example.pricer.models.Category
+import com.example.pricer.models.Store
+import com.example.pricer.models.StoreBrand
+import com.example.pricer.models.User
 
 class CategoryAdapter(private var categories: ArrayList<Category>,
                       private var context: Context,
-                      private var currentUser: User) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
+                      private var currentUser: User
+) : RecyclerView.Adapter<CategoryAdapter.ViewHolder>() {
 
     companion object {
         const val TAG = "CategoryAdapter"
     }
 
     var storeBrand = StoreBrand()
+    var selectedStore = Store()
+    var city = ""
+    var country = ""
+    var selectedCategory = ""
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         val view = LayoutInflater.from(p0.context).inflate(R.layout.category_list_item, p0, false)
@@ -48,7 +57,22 @@ class CategoryAdapter(private var categories: ArrayList<Category>,
                 intent.putExtra("currentUser", currentUser)
                 intent.putExtra("categoryName", category.categoryName)
                 intent.putExtra("storeBrand", storeBrand)
+                intent.putExtra("storeCity", city)
+                intent.putExtra("storeCountry", country)
+                intent.putExtra("selectedStore", selectedStore)
                 (context as Activity).startActivityForResult(intent, RequestCodes.SUB_CATEGORY_LIST_REQ_CODE)
+            }
+        } else {
+            holder.parent.setOnClickListener {
+                val intent = Intent(context, AddProductActivity::class.java)
+                intent.putExtra("currentUser", currentUser)
+                intent.putExtra("categoryName", category.categoryName)
+                intent.putExtra("subCategoryName", category.categoryName)
+                intent.putExtra("storeBrand", storeBrand)
+                intent.putExtra("storeCity", city)
+                intent.putExtra("storeCountry", country)
+                intent.putExtra("selectedStore", selectedStore)
+                (context as Activity).startActivityForResult(intent, RequestCodes.ADD_PRODUCT_REQ_CODE)
             }
         }
     }

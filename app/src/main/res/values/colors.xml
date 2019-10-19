@@ -9,4 +9,14 @@
     <color name="googleRed">#F14336</color>
     <color name="googleGreen">#28B446</color>
     <color name="googleYellow">#FBBB00</color>
+
+    <!-->Product colors<-->
+    <color name="productAccent">#FF8C61</color>
+
+    <!-->Product ripple colors<-->
+    <color name="productAccentRipple">#FFC39B</color>
+
+    <!-->Store colors<-->
+
+
 </resources>

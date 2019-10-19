@@ -1,9 +1,261 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddProductActivity">
+    tools:context=".AddProductActivity"
+    android:background="@color/md_white"
+    android:fillViewport="true">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:animateLayoutChanges="true"
+            android:id="@+id/ll_form"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Add Product"
+                android:textColor="@color/md_black"
+                android:textSize="@dimen/title_size"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/met_product_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
+                android:hint="Name"
+                android:inputType="textCapSentences"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Product name"
+                app:met_iconLeft="@drawable/product_name"
+                tools:ignore="HardcodedText" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/met_product_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:hint="Description"
+                android:inputType="textMultiLine|textCapSentences"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Product description"
+                app:met_iconLeft="@drawable/description"
+                tools:ignore="HardcodedText" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/met_product_current_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:hint="Price"
+                android:inputType="numberDecimal"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Product price"
+                app:met_iconLeft="@drawable/euro_symbol"
+                tools:ignore="HardcodedText" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/met_product_manufacturer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:hint="Manufacturer (optional)"
+                android:inputType="textCapWords"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Product manufacturer"
+                app:met_iconLeft="@drawable/manufacturer"
+                tools:ignore="HardcodedText" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/met_product_model"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:hint="Model (optional)"
+                android:inputType="textCapWords"
+                app:met_floatingLabel="highlight"
+                app:met_floatingLabelText="Product model"
+                app:met_iconLeft="@drawable/model"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:id="@+id/tv_sep_1"
+                android:background="@color/colorPrimary"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Product image"
+                android:textColor="@color/md_black"
+                android:textSize="16sp"
+                tools:ignore="HardcodedText" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                app:cardCornerRadius="28dp"
+                android:id="@+id/cv_product_image"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                >
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/iv_product_image"
+                    android:src="@drawable/walmart_place_holder"
+                    android:scaleType="centerCrop"
+                    />
+
+            </androidx.cardview.widget.CardView>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rl_add_image"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:elevation="2dp"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="8dp"
+                android:background="@drawable/btn_round_accent"
+                >
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/add"
+                    android:id="@+id/iv_add_image"
+                    android:tint="@color/md_white"
+                    android:layout_centerVertical="true"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_toEndOf="@id/iv_add_image"
+                    android:text="Add image"
+                    android:textStyle="bold"
+                    android:textAllCaps="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/md_white"
+                    android:textSize="15sp"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Write a review (optional)"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/md_black"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
+
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/sw_write_review"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_centerVertical="true"
+                    />
+
+            </RelativeLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fl_review"
+                android:visibility="gone">
+
+                <fragment
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/frag_review"
+                    class="com.example.pricer.fragments.ReviewFragment"
+                    />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rl_btn"
+            android:layout_below="@id/ll_form"
+            android:layout_marginTop="36dp"
+            android:layout_alignParentBottom="true"
+            android:paddingBottom="16dp"
+            android:clipToPadding="false"
+            >
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_add_product"
+                android:elevation="4dp"
+                android:text="Add product"
+                android:textSize="16sp"
+                android:textColor="@color/md_white"
+                android:background="@drawable/btn_round_product_accent"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="24dp"
+                tools:ignore="HardcodedText" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</ScrollView>

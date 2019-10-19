@@ -1,6 +1,8 @@
-package com.example.pricer
+package com.example.pricer.models
 
-class Store {
+import java.io.Serializable
+
+class Store: Serializable {
     var id: String = ""
     var storeImageId: String = ""
 
@@ -16,6 +18,7 @@ class Store {
     var isInUsa: Boolean = false
     var hasSchedule: Boolean = false
     var hasImage: Boolean = false
+    var rating: Double = -1.0
 
     var originallyAddedByName: String = ""
     var originallyAddedById: String = ""

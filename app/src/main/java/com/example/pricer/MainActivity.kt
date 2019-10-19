@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.RelativeLayout
 import androidx.viewpager.widget.ViewPager
+import com.example.pricer.models.User
 
 class MainActivity : AppCompatActivity() {
     private lateinit var pager: ViewPager

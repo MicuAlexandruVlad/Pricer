@@ -1,4 +1,4 @@
-package com.example.pricer
+package com.example.pricer.models
 
 import android.graphics.drawable.Drawable
 import java.io.Serializable

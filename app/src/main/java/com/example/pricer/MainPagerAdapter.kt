@@ -4,11 +4,15 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import com.example.pricer.fragments.ProductsFragment
+import com.example.pricer.fragments.StoresFragment
+import com.example.pricer.models.User
 
 class MainPagerAdapter (private val fragmentManager: FragmentManager,
                         private val bundleStores: Bundle,
                         private val bundleProducts: Bundle,
-                        private val currentUser: User) : FragmentPagerAdapter(fragmentManager)  {
+                        private val currentUser: User
+) : FragmentPagerAdapter(fragmentManager)  {
 
     private val numItems = 2
 
