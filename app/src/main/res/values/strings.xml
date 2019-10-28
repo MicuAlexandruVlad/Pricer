@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Pricer</string>
     <string name="add_store_message">If you can\'t find your store add it by pressing the Add button below</string>
+    <string name="product_uploaded">Your product has been successfully uploaded. If there is anything that you want to modify, go to My Added Products and press the edit button.</string>
 </resources>

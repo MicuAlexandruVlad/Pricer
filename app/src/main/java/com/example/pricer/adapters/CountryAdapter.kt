@@ -28,6 +28,7 @@ class CountryAdapter(private var countries: ArrayList<Country>,
     }
 
     var storeBrand = StoreBrand()
+    var isProductAdded = false
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         val view = LayoutInflater.from(p0.context).inflate(R.layout.country_list_item, p0, false)
@@ -51,6 +52,7 @@ class CountryAdapter(private var countries: ArrayList<Country>,
             intent.putExtra("currentUser", currentUser)
             intent.putExtra("country", country.countryName)
             intent.putExtra("storeBrand", storeBrand)
+            intent.putExtra("isProductAdded", isProductAdded)
             (context as Activity).startActivityForResult(intent, RequestCodes.CITY_LIST_REQ_CODE)
         }
     }

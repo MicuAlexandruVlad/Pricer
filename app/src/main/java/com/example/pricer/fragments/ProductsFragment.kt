@@ -39,6 +39,10 @@ class ProductsFragment : Fragment() {
 
         bindViews(view)
 
+        /*if (currentUser.isGuest) {
+            addProduct.visibility = View.GONE
+        }*/
+
         changeFragment.setOnClickListener {
             parentPager.setCurrentItem(0, true)
         }

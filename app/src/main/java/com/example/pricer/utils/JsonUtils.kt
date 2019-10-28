@@ -1,6 +1,8 @@
 package com.example.pricer.utils
 
+import com.example.pricer.models.Product
 import com.example.pricer.models.Store
+import com.example.pricer.models.StoreBrand
 import org.json.JSONArray
 
 class JsonUtils {
@@ -31,6 +33,44 @@ class JsonUtils {
                     store.lastEditedByName = obj.getString("lastEditedByName")
 
                     it.add(store)
+                }
+            }
+        }
+
+        fun jsonToStoreBrandArray(array: JSONArray): ArrayList<StoreBrand> {
+            return ArrayList<StoreBrand>().also {
+                for (index in 0 until array.length()) {
+                    val obj = array.getJSONObject(index)
+                    val storeBrand = StoreBrand()
+                    storeBrand.name = obj.getString("_id")
+                    storeBrand.initial = storeBrand.name.first().toString()
+                    it.add(storeBrand)
+                }
+            }
+        }
+
+        fun jsonToProductArray(array: JSONArray): ArrayList<Product> {
+            return ArrayList<Product>().also {
+                for (index in 0 until array.length()) {
+                    val product = Product()
+                    val obj = array.getJSONObject(index)
+                    product.id = obj.getString("_id")
+                    product.storeId = obj.getString("storeId")
+                    product.imageId = obj.getString("imageId")
+                    product.name = obj.getString("name")
+                    product.description = obj.getString("description")
+                    product.price = obj.getDouble("price")
+                    product.manufacturer = obj.getString("manufacturer")
+                    product.model = obj.getString("model")
+                    product.categoryName = obj.getString("categoryName")
+                    product.subCategoryName = obj.getString("subCategoryName")
+                    product.addedById = obj.getString("addedById")
+                    product.addedByName = obj.getString("addedByName")
+                    product.lastEditedById = obj.getString("lastEditedById")
+                    product.lastEditedByName = obj.getString("lastEditedByName")
+                    product.hasImage = obj.getBoolean("hasImage")
+
+                    it.add(product)
                 }
             }
         }

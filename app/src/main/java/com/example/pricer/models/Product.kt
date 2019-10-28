@@ -1,6 +1,9 @@
 package com.example.pricer.models
 
-class Product {
+import java.io.Serializable
+import java.math.BigInteger
+
+class Product: Serializable {
     var id: String = ""
     var storeId: String = ""
     var imageId: String = ""
@@ -12,6 +15,15 @@ class Product {
     var model: String = ""
     var categoryName: String = ""
     var subCategoryName: String = ""
+    var rating: Double = -1.0
+    var historicalPrices: String = ""
+    var hasImage: Boolean = false
+
+    // Popularity indexes
+    var clicks: Float = 0F
+    var follows: Float = 0F
+
+    var priceChange: Int = 0
 
     var addedById: String = ""
     var addedByName: String = ""

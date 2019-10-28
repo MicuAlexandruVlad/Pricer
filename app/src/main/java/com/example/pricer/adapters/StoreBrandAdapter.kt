@@ -17,7 +17,8 @@ import com.example.pricer.models.User
 
 class StoreBrandAdapter(private var storeBrands: ArrayList<StoreBrand>,
                         private var context: Context,
-                        private var currentUser: User
+                        private var currentUser: User,
+                        private var isProductAdded: Boolean
 ) : RecyclerView.Adapter<StoreBrandAdapter.ViewHolder>() {
 
     companion object {
@@ -34,7 +35,6 @@ class StoreBrandAdapter(private var storeBrands: ArrayList<StoreBrand>,
         return storeBrands.size
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val storeBrand = storeBrands[position]
 
@@ -44,6 +44,7 @@ class StoreBrandAdapter(private var storeBrands: ArrayList<StoreBrand>,
             val intent = Intent(context, CountryListActivity::class.java)
             intent.putExtra("currentUser", currentUser)
             intent.putExtra("storeBrand", storeBrand)
+            intent.putExtra("isProductAdded", isProductAdded)
             (context as Activity).startActivityForResult(intent, RequestCodes.COUNTRY_LIST_REQ_CODE)
         }
     }

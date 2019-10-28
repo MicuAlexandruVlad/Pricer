@@ -6,12 +6,15 @@ import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pricer.adapters.CityAdapter
+import com.example.pricer.constants.Actions
 import com.example.pricer.constants.ObjectType
 import com.example.pricer.events.GetResponseEvent
+import com.example.pricer.events.ObjectInstanceCreatedEvent
 import com.example.pricer.models.City
 import com.example.pricer.models.Country
 import com.example.pricer.models.StoreBrand
 import com.example.pricer.models.User
+import com.example.pricer.utils.ApiCalls
 import cz.msebera.android.httpclient.HttpStatus
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -40,12 +43,14 @@ class CityListActivity : AppCompatActivity() {
         currentUser = intent.getSerializableExtra("currentUser") as User
         storeBrand = intent.getSerializableExtra("storeBrand") as StoreBrand
         storeCountry = intent.getStringExtra("country") as String
+        val isProductAdded = intent.getBooleanExtra("isProductAdded", false)
 
         bindViews()
 
         cities = ArrayList()
 
         adapter = CityAdapter(cities, this, currentUser)
+        adapter.isProductAdded = isProductAdded
         adapter.country = Country().also { it.countryName = storeCountry }
         adapter.storeBrand = storeBrand
         recyclerView.layoutManager = LinearLayoutManager(this,
@@ -87,6 +92,14 @@ class CityListActivity : AppCompatActivity() {
 
                 }
             }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onProductCreated(objectInstanceCreatedEvent: ObjectInstanceCreatedEvent) {
+        if (objectInstanceCreatedEvent.objectType == ObjectType.OBJ_PRODUCT
+            && objectInstanceCreatedEvent.action == Actions.PRODUCT_CREATED) {
+            finish()
         }
     }
 }

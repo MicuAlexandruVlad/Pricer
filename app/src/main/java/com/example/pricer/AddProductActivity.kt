@@ -1,19 +1,36 @@
 package com.example.pricer
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.AlertDialog
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.example.pricer.constants.Actions
 import com.example.pricer.constants.Buttons
+import com.example.pricer.constants.ObjectType
+import com.example.pricer.constants.RequestCodes
+import com.example.pricer.dialogs.ImageLoaderDialog
 import com.example.pricer.events.ButtonPressedEvent
+import com.example.pricer.events.ObjectInstanceCreatedEvent
+import com.example.pricer.events.RegisterEvent
 import com.example.pricer.models.Product
 import com.example.pricer.models.Review
 import com.example.pricer.models.Store
 import com.example.pricer.models.User
+import com.example.pricer.utils.ApiCalls
+import com.example.pricer.utils.ImageUtils
 import com.rengwuxian.materialedittext.MaterialEditText
+import cz.msebera.android.httpclient.HttpStatus
+import kotlinx.android.synthetic.main.activity_add_product.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -43,7 +60,12 @@ class AddProductActivity : AppCompatActivity() {
     private lateinit var product: Product
     private lateinit var categoryName: String
     private lateinit var subCategoryName: String
-    private var hasImage: Boolean = true
+    private var hasImage: Boolean = false
+    private lateinit var encodedImageSm: String
+    private lateinit var encodedImageLg: String
+    private var reviewUploaded = false
+    private var productUploaded = false
+    private var imageUploaded = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,8 +88,23 @@ class AddProductActivity : AppCompatActivity() {
             }
         }
 
+        productImageCV.visibility = View.GONE
+
         addImage.setOnClickListener {
-            Log.d(TAG, "Add image clicked")
+            val imageLoaderDialog = ImageLoaderDialog(this)
+            imageLoaderDialog.create()
+            imageLoaderDialog.show()
+
+            imageLoaderDialog.setOnDismissListener {
+                if (imageLoaderDialog.isMethodSelected) {
+                    if (imageLoaderDialog.galleryClicked) {
+                        launchGalleryIntent()
+                    }
+                    if (imageLoaderDialog.cameraClicked) {
+                        launchCameraIntent()
+                    }
+                }
+            }
         }
 
         addProduct.setOnClickListener {
@@ -84,6 +121,16 @@ class AddProductActivity : AppCompatActivity() {
                 })
             }
         }
+    }
+
+    private fun launchCameraIntent() {
+
+    }
+
+    private fun launchGalleryIntent() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, RequestCodes.GALLERY_REQ_CODE)
     }
 
     private fun bindViews() {
@@ -113,12 +160,65 @@ class AddProductActivity : AppCompatActivity() {
             } else {
                 bindProductData()
                 bindReviewData(review)
-                // TODO: upload product & review
+                Log.d(TAG, "Upload all")
+                // TODO: upload product, review & image
+                ApiCalls.uploadProduct(this, product, encodedImageSm, encodedImageLg, true, review)
             }
         } else {
-            // TODO: upload product
+            // TODO: upload product & image
+            Log.d(TAG, "Upload just the product & image")
+            ApiCalls.uploadProduct(this, product, encodedImageSm, encodedImageLg, false, null)
         }
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRegisterEvent(registerEvent: RegisterEvent) {
+        if (registerEvent.status == HttpStatus.SC_CREATED) {
+            when (registerEvent.objType) {
+                ObjectType.OBJ_PRODUCT -> {
+                    productUploaded = true
+                }
+
+                ObjectType.OBJ_REVIEW -> {
+                    reviewUploaded = true
+                }
+
+                ObjectType.OBJ_PRODUCT_IMAGE -> {
+                    imageUploaded = true
+                }
+            }
+            if (productUploaded && reviewUploaded && imageUploaded) {
+                // TODO: finish the activity and send the result back to the other activities
+                Log.d(TAG, "Product, review and image uploaded")
+                showProductUploadedDialog()
+            }
+        } else {
+            Toast.makeText(this, "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showProductUploadedDialog() {
+        val builder = AlertDialog.Builder(this)
+            .setTitle("Product Uploaded")
+            .setMessage(getString(R.string.product_uploaded))
+            .setNeutralButton("OK") { dialogInterface, _ ->
+                // notifies any subscribed activity that the user has added a new product
+                emitObjectInstanceCreatedEvent()
+                dialogInterface.dismiss()
+                finish()
+            }
+
+        builder.create()
+        builder.show()
+    }
+
+    private fun emitObjectInstanceCreatedEvent() {
+        val objectInstanceCreatedEvent = ObjectInstanceCreatedEvent()
+        objectInstanceCreatedEvent.action = Actions.PRODUCT_CREATED
+        objectInstanceCreatedEvent.objectType = ObjectType.OBJ_PRODUCT
+        objectInstanceCreatedEvent.product = product
+
+        EventBus.getDefault().post(objectInstanceCreatedEvent)
     }
 
     private fun bindReviewData(review: Review) {
@@ -126,8 +226,6 @@ class AddProductActivity : AppCompatActivity() {
         review.isForStore = false
         review.addedById = currentUser.id
         review.addedByName = currentUser.firstName + " " + currentUser.lastName
-
-        // TODO: update the review.productId on the server side after the product is registered in the DB
     }
 
     private fun bindProductData() {
@@ -140,8 +238,41 @@ class AddProductActivity : AppCompatActivity() {
         product.model = model.text.toString()
         product.categoryName = categoryName
         product.subCategoryName = subCategoryName
+        product.hasImage = hasImage
 
         product.addedById = currentUser.id
         product.addedByName = currentUser.firstName + " " + currentUser.lastName
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK) {
+            when (requestCode) {
+                RequestCodes.GALLERY_REQ_CODE -> {
+                    if (data != null) {
+                        hasImage = true
+
+                        productImageCV.visibility = View.VISIBLE
+
+                        val uri = data.data
+                        val bmp = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+
+                        Glide.with(this).load(bmp).into(productImage)
+
+                        runOnUiThread {
+                            tv_add_image.text = "Change Image"
+                            tv_add_image.isAllCaps = true
+
+                            iv_add_image.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.reload))
+                        }
+
+                        encodedImageSm = ImageUtils.encodeImage(bmp, true)
+                        encodedImageLg = ImageUtils.encodeImage(bmp, false)
+                    }
+                }
+            }
+        }
     }
 }

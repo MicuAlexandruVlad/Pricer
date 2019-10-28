@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:animateLayoutChanges="true"
+        android:paddingBottom="16dp"
         >
 
         <TextView
@@ -771,8 +772,10 @@
             android:textSize="16sp"
             android:textColor="@color/md_white"
             android:layout_below="@id/cv_store_image"
-            android:background="@drawable/btn_semi_round_dark"
+            android:background="@drawable/btn_round_store_accent"
             android:elevation="12dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="48dp"
             tools:ignore="HardcodedText" />
 

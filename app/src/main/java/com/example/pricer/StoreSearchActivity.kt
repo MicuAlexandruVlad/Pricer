@@ -10,10 +10,11 @@ import com.example.pricer.adapters.StoresResultAdapter
 import com.example.pricer.constants.Actions
 import com.example.pricer.constants.ObjectType
 import com.example.pricer.events.GetResponseEvent
-import com.example.pricer.events.RegisterEvent
+import com.example.pricer.events.ObjectInstanceCreatedEvent
 import com.example.pricer.models.Store
 import com.example.pricer.models.StoreBrand
 import com.example.pricer.models.User
+import com.example.pricer.utils.ApiCalls
 import com.example.pricer.utils.JsonUtils
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import cz.msebera.android.httpclient.HttpStatus
@@ -49,9 +50,11 @@ class StoreSearchActivity : AppCompatActivity() {
         storeBrand = intent.getSerializableExtra("storeBrand") as StoreBrand
         city = intent.getStringExtra("city") as String
         country = intent.getStringExtra("country") as String
+        val isProductAdded = intent.getBooleanExtra("isProductAdded", false)
 
         foundStores = ArrayList()
         adapter = StoresResultAdapter(foundStores, this, currentUser)
+        adapter.isProductAdded = isProductAdded
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = adapter
 
@@ -83,6 +86,14 @@ class StoreSearchActivity : AppCompatActivity() {
                     runOnUiThread { adapter.notifyDataSetChanged() }
                 }
             }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onProductCreated(objectInstanceCreatedEvent: ObjectInstanceCreatedEvent) {
+        if (objectInstanceCreatedEvent.objectType == ObjectType.OBJ_PRODUCT
+            && objectInstanceCreatedEvent.action == Actions.PRODUCT_CREATED) {
+            finish()
         }
     }
 

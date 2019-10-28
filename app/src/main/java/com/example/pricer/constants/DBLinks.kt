@@ -13,6 +13,12 @@ class DBLinks {
         const val searchStoreGroupStreet: String = baseLink + "stores/search-store-brand-group-street/"
         const val storeBrands: String = baseLink + "stores/search-brands/"
         const val storeSearch: String = baseLink + "stores/store-search/"
+        const val registerReview: String = baseLink + "reviews/register-review/"
+        const val registerProduct: String = baseLink + "products/register-product/"
+        const val uploadProductImage: String = baseLink + "product-images/upload-product-image/"
+        const val featuredProducts: String = baseLink + "products/featured-products/"
+        const val productDeals: String = baseLink + "products/product-deals/"
+        const val recentlyAddedProducts: String = baseLink + "products/recently-added-products/"
 
         fun storeImageLargeUrl(storeId: String, storeImageId: String): String {
             return baseLink + "store-images/store-image-large/$storeId/images/$storeImageId/"
@@ -20,6 +26,14 @@ class DBLinks {
 
         fun storeImageSmallUrl(storeId: String, storeImageId: String): String {
             return baseLink + "store-images/store-image-small/$storeId/images/$storeImageId/"
+        }
+
+        fun productImageLargeUrl(productId: String, productImageId: String): String {
+            return baseLink + "product-images/product-image-large/$productId/images/$productImageId/"
+        }
+
+        fun productImageSmallUrl(productId: String, productImageId: String): String {
+            return baseLink + "product-images/product-image-small/$productId/images/$productImageId/"
         }
     }
 }

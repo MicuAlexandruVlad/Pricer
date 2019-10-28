@@ -10,6 +10,7 @@ import android.widget.Toast
 import com.example.pricer.events.RegisterEvent
 import com.example.pricer.constants.ObjectType
 import com.example.pricer.models.User
+import com.example.pricer.utils.ApiCalls
 import com.google.android.material.textfield.TextInputEditText
 import cz.msebera.android.httpclient.HttpStatus
 import org.greenrobot.eventbus.EventBus

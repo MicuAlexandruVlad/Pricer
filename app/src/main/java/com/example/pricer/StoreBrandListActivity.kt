@@ -11,10 +11,13 @@ import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pricer.adapters.StoreBrandAdapter
+import com.example.pricer.constants.Actions
 import com.example.pricer.constants.ObjectType
 import com.example.pricer.events.GetResponseEvent
+import com.example.pricer.events.ObjectInstanceCreatedEvent
 import com.example.pricer.models.StoreBrand
 import com.example.pricer.models.User
+import com.example.pricer.utils.ApiCalls
 import cz.msebera.android.httpclient.HttpStatus
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -56,8 +59,8 @@ class StoreBrandListActivity : AppCompatActivity() {
         recyclerViewInitial.visibility = View.VISIBLE
         recyclerViewSearch.visibility = View.GONE
 
-        storeBrandInitialAdapter = StoreBrandAdapter(storeBrandsInitial, this, currentUser)
-        storeBrandSearchAdapter = StoreBrandAdapter(storeBrandsSearch, this, currentUser)
+        storeBrandInitialAdapter = StoreBrandAdapter(storeBrandsInitial, this, currentUser, true)
+        storeBrandSearchAdapter = StoreBrandAdapter(storeBrandsSearch, this, currentUser, true)
         recyclerViewSearch.adapter = storeBrandSearchAdapter
         recyclerViewInitial.adapter = storeBrandInitialAdapter
         recyclerViewSearch.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -136,6 +139,14 @@ class StoreBrandListActivity : AppCompatActivity() {
                     Toast.makeText(this, "Nothing found :(", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onProductCreated(objectInstanceCreatedEvent: ObjectInstanceCreatedEvent) {
+        if (objectInstanceCreatedEvent.objectType == ObjectType.OBJ_PRODUCT
+            && objectInstanceCreatedEvent.action == Actions.PRODUCT_CREATED) {
+            finish()
         }
     }
 

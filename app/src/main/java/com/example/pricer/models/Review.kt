@@ -1,6 +1,8 @@
 package com.example.pricer.models
 
-class Review {
+import java.io.Serializable
+
+class Review: Serializable {
     var id: String = ""
     var storeId: String = ""
     var productId: String = ""

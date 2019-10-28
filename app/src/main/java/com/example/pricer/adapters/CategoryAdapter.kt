@@ -66,7 +66,7 @@ class CategoryAdapter(private var categories: ArrayList<Category>,
             holder.parent.setOnClickListener {
                 val intent = Intent(context, AddProductActivity::class.java)
                 intent.putExtra("currentUser", currentUser)
-                intent.putExtra("categoryName", category.categoryName)
+                intent.putExtra("categoryName", selectedCategory)
                 intent.putExtra("subCategoryName", category.categoryName)
                 intent.putExtra("storeBrand", storeBrand)
                 intent.putExtra("storeCity", city)

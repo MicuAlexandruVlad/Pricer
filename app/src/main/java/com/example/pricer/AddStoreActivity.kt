@@ -2,7 +2,6 @@ package com.example.pricer
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.RectF
 import android.os.Bundle
 import android.provider.MediaStore
@@ -18,10 +17,10 @@ import com.example.pricer.constants.ObjectType
 import com.example.pricer.constants.RequestCodes
 import com.example.pricer.models.Store
 import com.example.pricer.models.User
-import com.loopj.android.http.Base64
+import com.example.pricer.utils.ApiCalls
+import com.example.pricer.utils.ImageUtils
 import com.rengwuxian.materialedittext.MaterialEditText
 import cz.msebera.android.httpclient.HttpStatus
-import org.apache.commons.io.output.ByteArrayOutputStream
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -290,8 +289,8 @@ class AddStoreActivity : AppCompatActivity() {
                 }
                 imageCompressing = true
 
-                galleryEncodedImageLg = encodeImage(bmp, false)
-                galleryEncodedImageSm = encodeImage(bmp, true)
+                galleryEncodedImageLg = ImageUtils.encodeImage(bmp, false)
+                galleryEncodedImageSm = ImageUtils.encodeImage(bmp, true)
 
                 imageCompressing = false
                 runOnUiThread {
@@ -299,50 +298,6 @@ class AddStoreActivity : AppCompatActivity() {
                 }
             }.start()
         }
-    }
-
-    private fun encodeImage(bmp: Bitmap, resize: Boolean): String {
-        return Base64.encodeToString(bitmapToByteArray(bmp, resize), Base64.DEFAULT)
-    }
-
-    private fun bitmapToByteArray(bmp: Bitmap, resize: Boolean): ByteArray {
-        val stream = ByteArrayOutputStream()
-        Log.d(TAG, "Original bmp byte count -> " + bmp.byteCount)
-        Log.d(TAG, "Original bmp width -> " + bmp.width)
-        Log.d(TAG, "Original bmp height -> " + bmp.height)
-        if (resize) {
-            var bmpSm = Bitmap.createScaledBitmap(bmp, bmp.width / 5,
-                bmp.height / 5, false)
-            bmpSm.compress(Bitmap.CompressFormat.JPEG, 60, stream)
-
-            Log.d(TAG, "Resized bmp byte count -> " + bmpSm.byteCount)
-            Log.d(TAG, "Resized bmp width -> " + bmpSm.width)
-            Log.d(TAG, "Resized bmp height -> " + bmpSm.height)
-        } else {
-            val streamLg = ByteArrayOutputStream()
-            var bmpLg = bmp
-            Log.d(TAG, "image byte count before loop -> " + bmpLg.byteCount)
-            Log.d(TAG, "image height before loop -> " + bmpLg.height)
-            while (bmpLg.width * bmpLg.height > 3686400) {
-                bmpLg = Bitmap.createScaledBitmap(bmpLg, (bmpLg.width / 1.7).toInt(),
-                    (bmpLg.height / 1.7).toInt(), false)
-            }
-
-            Log.d(TAG, "image byte count after loop -> " + bmpLg.byteCount)
-            Log.d(TAG, "image height after loop -> " + bmpLg.height)
-
-            bmpLg.compress(Bitmap.CompressFormat.JPEG, 40, streamLg)
-
-            val byteArray = streamLg.toByteArray()
-            Log.d(TAG, "resized byte array size -> " + byteArray.size)
-            // resizedBmp.recycle()
-
-            return byteArray
-        }
-        val byteArray = stream.toByteArray()
-        // bmp.recycle()
-
-        return byteArray
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

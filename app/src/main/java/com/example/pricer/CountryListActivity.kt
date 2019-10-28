@@ -6,11 +6,14 @@ import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pricer.adapters.CountryAdapter
+import com.example.pricer.constants.Actions
 import com.example.pricer.constants.ObjectType
 import com.example.pricer.events.GetResponseEvent
+import com.example.pricer.events.ObjectInstanceCreatedEvent
 import com.example.pricer.models.Country
 import com.example.pricer.models.StoreBrand
 import com.example.pricer.models.User
+import com.example.pricer.utils.ApiCalls
 import cz.msebera.android.httpclient.HttpStatus
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -37,12 +40,14 @@ class CountryListActivity : AppCompatActivity() {
 
         currentUser = intent.getSerializableExtra("currentUser") as User
         storeBrand = intent.getSerializableExtra("storeBrand") as StoreBrand
+        val isProductAdded = intent.getBooleanExtra("isProductAdded", false)
 
         bindViews()
 
         countries = ArrayList()
 
         adapter = CountryAdapter(countries, this, currentUser)
+        adapter.isProductAdded = isProductAdded
         adapter.storeBrand = storeBrand
         rv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv.isNestedScrollingEnabled = false
@@ -78,6 +83,14 @@ class CountryListActivity : AppCompatActivity() {
 
                 }
             }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onProductCreated(objectInstanceCreatedEvent: ObjectInstanceCreatedEvent) {
+        if (objectInstanceCreatedEvent.objectType == ObjectType.OBJ_PRODUCT
+            && objectInstanceCreatedEvent.action == Actions.PRODUCT_CREATED) {
+            finish()
         }
     }
 

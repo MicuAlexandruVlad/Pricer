@@ -15,10 +15,12 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:usesCleartextTraffic="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".StoreSearchActivity"></activity>
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".ProductPageActivity"></activity>
+        <activity android:name=".StorePageActivity" />
+        <activity android:name=".StoreSearchActivity" />
         <activity android:name=".CityListActivity" />
         <activity android:name=".CountryListActivity" />
         <activity android:name=".SubCategoryListActivity" />
@@ -47,6 +49,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/paths" />
         </provider>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

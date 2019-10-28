@@ -41,8 +41,6 @@ class ReviewFragment: Fragment() {
 
         bindViews(view)
 
-
-
         return view
     }
 

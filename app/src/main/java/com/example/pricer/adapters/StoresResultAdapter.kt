@@ -33,6 +33,7 @@ class StoresResultAdapter(private var stores: ArrayList<Store>,
     var storeBrand = StoreBrand()
     var city = ""
     var country = ""
+    var isProductAdded = false
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         val view = LayoutInflater.from(p0.context).inflate(R.layout.store_result_list_item, p0, false)
@@ -72,14 +73,26 @@ class StoresResultAdapter(private var stores: ArrayList<Store>,
             Log.d(TAG, "Store image url -> $url")
         }
 
-        holder.body.setOnClickListener {
-            val intent = Intent(context, CategoryListActivity::class.java)
-            intent.putExtra("currentUser", currentUser)
-            intent.putExtra("storeCity", city)
-            intent.putExtra("storeCountry", country)
-            intent.putExtra("selectedStore", store)
-            intent.putExtra("storeBrand", storeBrand)
-            (context as Activity).startActivityForResult(intent, RequestCodes.CATEGORY_LIST_REQ_CODE)
+        if (isProductAdded) {
+            holder.body.setOnClickListener {
+                val intent = Intent(context, CategoryListActivity::class.java)
+                intent.putExtra("currentUser", currentUser)
+                intent.putExtra("storeCity", city)
+                intent.putExtra("storeCountry", country)
+                intent.putExtra("selectedStore", store)
+                intent.putExtra("storeBrand", storeBrand)
+                (context as Activity).startActivityForResult(intent, RequestCodes.CATEGORY_LIST_REQ_CODE)
+            }
+        } else {
+            holder.body.setOnClickListener {
+                val intent = Intent(context, StorePageActivity::class.java)
+                intent.putExtra("currentUser", currentUser)
+                intent.putExtra("storeCity", city)
+                intent.putExtra("storeCountry", country)
+                intent.putExtra("selectedStore", store)
+                intent.putExtra("storeBrand", storeBrand)
+                (context as Activity).startActivityForResult(intent, RequestCodes.STORE_PAGE_REQ_CODE)
+            }
         }
     }
 
