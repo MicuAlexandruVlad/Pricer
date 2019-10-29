@@ -14,5 +14,6 @@ class RequestCodes {
         const val CITY_LIST_REQ_CODE = 10
         const val FOUND_STORES_REQ_CODE = 11
         const val STORE_PAGE_REQ_CODE = 12
+        const val PRODUCT_PAGE_REQ_CODE = 13
     }
 }

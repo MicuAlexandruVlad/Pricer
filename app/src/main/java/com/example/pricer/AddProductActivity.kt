@@ -13,7 +13,10 @@ import android.widget.*
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.pricer.adapters.SpecsAdapter
 import com.example.pricer.constants.Actions
 import com.example.pricer.constants.Buttons
 import com.example.pricer.constants.ObjectType
@@ -34,6 +37,7 @@ import kotlinx.android.synthetic.main.activity_add_product.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.lang.StringBuilder
 
 class AddProductActivity : AppCompatActivity() {
 
@@ -46,6 +50,10 @@ class AddProductActivity : AppCompatActivity() {
     private lateinit var price: MaterialEditText
     private lateinit var manufacturer: MaterialEditText
     private lateinit var model: MaterialEditText
+    private lateinit var specs: Switch
+    private lateinit var specsHolder: RelativeLayout
+    private lateinit var specsRv: RecyclerView
+    private lateinit var addSpec: RelativeLayout
     private lateinit var addImage: RelativeLayout
     private lateinit var productImageCV: CardView
     private lateinit var productImage: ImageView
@@ -63,9 +71,12 @@ class AddProductActivity : AppCompatActivity() {
     private var hasImage: Boolean = false
     private lateinit var encodedImageSm: String
     private lateinit var encodedImageLg: String
+    private var isEdit: Boolean = false
     private var reviewUploaded = false
     private var productUploaded = false
     private var imageUploaded = false
+    private lateinit var specsBlankList: ArrayList<String>
+    private lateinit var specsAdapter: SpecsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,10 +86,31 @@ class AddProductActivity : AppCompatActivity() {
 
         bindViews()
 
+        specsHolder.visibility = View.GONE
+
         currentUser = intent.getSerializableExtra("currentUser") as User
         categoryName = intent.getStringExtra("categoryName") as String
         subCategoryName = intent.getStringExtra("subCategoryName") as String
         selectedStore = intent.getSerializableExtra("selectedStore") as Store
+        isEdit = intent.getBooleanExtra("isEdit", false)
+
+        specsBlankList = ArrayList()
+        specsAdapter = SpecsAdapter(specsBlankList, this, currentUser)
+        specsRv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        specsRv.adapter = specsAdapter
+
+        specs.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                specsHolder.visibility = View.VISIBLE
+            } else {
+                specsHolder.visibility = View.GONE
+            }
+        }
+
+        addSpec.setOnClickListener {
+            specsBlankList.add("")
+            specsAdapter.notifyItemInserted(specsBlankList.size - 1)
+        }
 
         writeReview.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -115,6 +147,8 @@ class AddProductActivity : AppCompatActivity() {
                 Toast.makeText(this, "One or more fields are empty", Toast.LENGTH_SHORT).show()
             } else if (!hasImage) {
                 Toast.makeText(this, "Product has no image", Toast.LENGTH_SHORT).show()
+            } else if (!appendProductSpecData() && specs.isChecked) {
+                Toast.makeText(this, "Spec fields can not be empty", Toast.LENGTH_SHORT).show()
             } else {
                 EventBus.getDefault().post(ButtonPressedEvent().also {
                     it.buttonId = Buttons.BTN_ADD_PRODUCT
@@ -145,6 +179,10 @@ class AddProductActivity : AppCompatActivity() {
         addProduct = findViewById(R.id.btn_add_product)
         writeReview = findViewById(R.id.sw_write_review)
         reviewLayout = findViewById(R.id.fl_review)
+        specs = findViewById(R.id.sw_product_specs)
+        specsHolder = findViewById(R.id.rl_product_specs_holder)
+        specsRv = findViewById(R.id.rv_product_specs)
+        addSpec = findViewById(R.id.rl_add_product_spec)
     }
 
     override fun onDestroy() {
@@ -226,6 +264,8 @@ class AddProductActivity : AppCompatActivity() {
         review.isForStore = false
         review.addedById = currentUser.id
         review.addedByName = currentUser.firstName + " " + currentUser.lastName
+        product.rating = review.rating
+        product.reviewCount = 1
     }
 
     private fun bindProductData() {
@@ -234,6 +274,7 @@ class AddProductActivity : AppCompatActivity() {
         product.name = name.text.toString()
         product.description = description.text.toString()
         product.price = price.text.toString().toDouble()
+        product.historicalPrices = price.text.toString() + "!_!"
         product.manufacturer = manufacturer.text.toString()
         product.model = model.text.toString()
         product.categoryName = categoryName
@@ -242,6 +283,42 @@ class AddProductActivity : AppCompatActivity() {
 
         product.addedById = currentUser.id
         product.addedByName = currentUser.firstName + " " + currentUser.lastName
+    }
+
+    private fun appendProductSpecData(): Boolean {
+        val specBuilder = StringBuilder()
+        val specTitleBuilder = StringBuilder()
+        if (specsBlankList.size == 0) {
+            return false
+        } else {
+            for (index in 0 until specsBlankList.size) {
+                val child = specsRv.getChildAt(index)
+
+                val specTitle: MaterialEditText = child.findViewById(R.id.met_spec_title)
+                val spec: MaterialEditText = child.findViewById(R.id.met_spec)
+
+                if (spec.text.toString().isNotEmpty() || specTitle.text.toString().isNotEmpty()) {
+                    if (index == specsBlankList.size - 1) {
+                        specTitleBuilder.append(specTitle.text.toString())
+                        specBuilder.append(spec.text.toString())
+                    } else {
+                        specTitleBuilder.append(specTitle.text.toString())
+                        specTitleBuilder.append("!_!")
+                        specBuilder.append(spec.text.toString())
+                        specBuilder.append("!_!")
+                    }
+                } else {
+                    return false
+                }
+            }
+        }
+        product.specTitles = ""
+        product.specs = ""
+
+        product.specTitles = specTitleBuilder.toString()
+        product.specs = specBuilder.toString()
+
+        return true
     }
 
     @SuppressLint("SetTextI18n")

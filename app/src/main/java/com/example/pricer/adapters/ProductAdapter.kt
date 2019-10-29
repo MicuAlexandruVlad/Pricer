@@ -58,6 +58,7 @@ class ProductAdapter(private var products: ArrayList<Product>,
             val intent = Intent(context, ProductPageActivity::class.java)
             intent.putExtra("currentUser", currentUser)
             intent.putExtra("selectedProduct", product)
+            context.startActivity(intent)
         }
     }
 

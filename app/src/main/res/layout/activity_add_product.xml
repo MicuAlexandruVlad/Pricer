@@ -112,14 +112,102 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:id="@+id/tv_sep_1"
-                android:background="@color/colorPrimary"
+                android:background="@color/productAccent"
                 android:layout_marginTop="16dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="16dp"
                 />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="Product specs (optional)"
+                    android:layout_toStartOf="@id/sw_product_specs"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/md_black"
+                    android:textSize="16sp"
+                    tools:ignore="HardcodedText" />
+
+                <Switch
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/sw_product_specs"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_centerVertical="true"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rl_product_specs_holder"
+                >
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:id="@+id/rv_product_specs"
+                    android:nestedScrollingEnabled="false"
+                    />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rl_add_product_spec"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:elevation="2dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:background="@drawable/btn_round_accent"
+                    android:layout_below="@id/rv_product_specs"
+                    android:layout_centerHorizontal="true"
+                    >
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/add"
+                        android:id="@+id/iv_add_product_spec"
+                        android:tint="@color/md_white"
+                        android:layout_centerVertical="true"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginEnd="12dp"
+                        android:layout_toEndOf="@id/iv_add_product_spec"
+                        android:text="Add spec"
+                        android:id="@+id/tv_add_product_spec"
+                        android:textStyle="bold"
+                        android:textAllCaps="true"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/md_white"
+                        android:textSize="15sp"
+                        tools:ignore="HardcodedText" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:layout_marginStart="16dp"
                 android:text="Product image"
                 android:textColor="@color/md_black"

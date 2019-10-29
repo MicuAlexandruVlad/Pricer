@@ -72,6 +72,7 @@ class CategoryAdapter(private var categories: ArrayList<Category>,
                 intent.putExtra("storeCity", city)
                 intent.putExtra("storeCountry", country)
                 intent.putExtra("selectedStore", selectedStore)
+                intent.putExtra("isEdit", false)
                 (context as Activity).startActivityForResult(intent, RequestCodes.ADD_PRODUCT_REQ_CODE)
             }
         }
