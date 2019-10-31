@@ -7,6 +7,7 @@ import com.example.pricer.constants.Actions
 import com.example.pricer.constants.DBLinks
 import com.example.pricer.constants.ObjectType
 import com.example.pricer.events.GetResponseEvent
+import com.example.pricer.events.UpdateEvent
 import com.example.pricer.models.Product
 import com.example.pricer.models.Review
 import com.example.pricer.models.Store
@@ -486,6 +487,34 @@ class ApiCalls {
             })
         }
 
+        fun updateProductPrice(context: Context, product: Product) {
+            val client = AsyncHttpClient()
+            val params = RequestParams()
+
+            params.put("price", product.price)
+            params.put("historicalPrices", product.historicalPrices)
+            params.put("id", product.id)
+
+            client.post(DBLinks.updateProductPrice, params, object : JsonHttpResponseHandler() {
+                override fun onSuccess(
+                    statusCode: Int,
+                    headers: Array<out Header>?,
+                    response: JSONObject?
+                ) {
+                    super.onSuccess(statusCode, headers, response)
+
+                    Log.d(TAG, "updateProductPrice: response -> $response")
+
+                    val updateEvent = UpdateEvent()
+                    updateEvent.objType = ObjectType.OBJ_PRODUCT
+                    updateEvent.status = response!!.getInt("status")
+                    updateEvent.action = Actions.PRODUCT_PRICE_UPDATED
+
+                    emitUpdateEvent(updateEvent)
+                }
+            })
+        }
+
         fun getFeaturedProducts(context: Context, storeId: String, limit: Int) {
             val client = AsyncHttpClient()
             val params = RequestParams()
@@ -528,6 +557,10 @@ class ApiCalls {
 
         private fun emitGetResponseEvent(getResponseEvent: GetResponseEvent) {
             EventBus.getDefault().post(getResponseEvent)
+        }
+
+        private fun emitUpdateEvent(updateEvent: UpdateEvent) {
+            EventBus.getDefault().post(updateEvent)
         }
     }
 }

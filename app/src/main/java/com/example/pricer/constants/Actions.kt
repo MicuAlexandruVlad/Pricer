@@ -10,5 +10,6 @@ class Actions {
         const val PRODUCT_IMAGE_UPLOADED = 6
         const val PRODUCT_CREATED = 7
         const val FEATURED_PRODUCTS_RECEIVED = 8
+        const val PRODUCT_PRICE_UPDATED = 9
     }
 }

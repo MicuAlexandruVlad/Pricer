@@ -245,6 +245,7 @@
                 android:paddingEnd="12dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/btn_round_accent"
                 >
 
@@ -277,7 +278,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
+                android:id="@+id/rl_review_switch_holder"
                 >
 
                 <TextView

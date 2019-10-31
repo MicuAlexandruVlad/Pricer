@@ -15,10 +15,21 @@ class Styles {
                 , R.color.storePrimaryDark)
         }
 
-        fun getDominantColor(context: Context, imageView: ImageView): Int {
+        fun getColorFromImage(context: Context, imageView: ImageView): Int {
             val palette = Palette.from(imageView.drawable.toBitmap()).generate()
 
-            return palette.getDominantColor(ContextCompat.getColor(context, R.color.storePrimaryDark))
+            if (palette.darkVibrantSwatch == null) {
+                if (palette.lightVibrantSwatch == null) {
+                    if (palette.dominantSwatch != null) {
+                        return palette.getDominantColor(ContextCompat.getColor(context, R.color.storePrimaryDark))
+                    }
+                } else {
+                    return palette.getLightVibrantColor(ContextCompat.getColor(context, R.color.storePrimaryDark))
+                }
+
+            }
+
+            return palette.getDarkVibrantColor(ContextCompat.getColor(context, R.color.storePrimaryDark))
         }
     }
 }

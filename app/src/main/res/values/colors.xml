@@ -12,6 +12,7 @@
 
     <!-->Product colors<-->
     <color name="productAccent">#FF8C61</color>
+    <color name="productPrimaryDark">#313638</color>
 
     <!-->Product ripple colors<-->
     <color name="productAccentRipple">#FFC39B</color>

@@ -175,7 +175,7 @@
                     android:id="@+id/tv_1"
                     android:text="Description"
                     android:textColor="@color/md_black"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="56dp"
                     android:textStyle="bold"
@@ -190,7 +190,7 @@
                     android:textColor="@color/md_black"
                     android:layout_marginStart="16dp"
                     android:layout_marginBottom="24dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="12dp"
                     android:layout_marginEnd="16dp"
                     />
 
@@ -211,23 +211,20 @@
                     android:id="@+id/tv_2"
                     android:text="Specifications"
                     android:textColor="@color/md_black"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="56dp"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 
-                <TextView
+                <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/tv_product_specs"
+                    android:id="@+id/rv_product_specs"
                     android:layout_below="@id/tv_2"
-                    android:textSize="16sp"
-                    android:textColor="@color/md_black"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginBottom="24dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:nestedScrollingEnabled="false"
                     />
 
             </RelativeLayout>

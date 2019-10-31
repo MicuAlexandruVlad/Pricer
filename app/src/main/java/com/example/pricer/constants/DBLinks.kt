@@ -16,6 +16,7 @@ class DBLinks {
         const val registerReview: String = baseLink + "reviews/register-review/"
         const val registerProduct: String = baseLink + "products/register-product/"
         const val uploadProductImage: String = baseLink + "product-images/upload-product-image/"
+        const val updateProductPrice: String = baseLink + "products/update-product-price/"
         const val featuredProducts: String = baseLink + "products/featured-products/"
         const val productDeals: String = baseLink + "products/product-deals/"
         const val recentlyAddedProducts: String = baseLink + "products/recently-added-products/"

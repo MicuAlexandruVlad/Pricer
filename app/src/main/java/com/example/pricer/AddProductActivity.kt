@@ -16,11 +16,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.pricer.adapters.SpecsAdapter
-import com.example.pricer.constants.Actions
-import com.example.pricer.constants.Buttons
-import com.example.pricer.constants.ObjectType
-import com.example.pricer.constants.RequestCodes
+import com.example.pricer.adapters.SpecsRegistrationAdapter
+import com.example.pricer.constants.*
 import com.example.pricer.dialogs.ImageLoaderDialog
 import com.example.pricer.events.ButtonPressedEvent
 import com.example.pricer.events.ObjectInstanceCreatedEvent
@@ -31,6 +28,7 @@ import com.example.pricer.models.Store
 import com.example.pricer.models.User
 import com.example.pricer.utils.ApiCalls
 import com.example.pricer.utils.ImageUtils
+import com.google.gson.Gson
 import com.rengwuxian.materialedittext.MaterialEditText
 import cz.msebera.android.httpclient.HttpStatus
 import kotlinx.android.synthetic.main.activity_add_product.*
@@ -60,12 +58,14 @@ class AddProductActivity : AppCompatActivity() {
     private lateinit var writeReview: Switch
     private lateinit var reviewLayout: FrameLayout
     private lateinit var reviewFragment: Fragment
+    private lateinit var reviewSwitchHolder: RelativeLayout
 
     private lateinit var addProduct: Button
 
     private lateinit var currentUser: User
     private lateinit var selectedStore: Store
     private lateinit var product: Product
+    private lateinit var productToEdit: Product
     private lateinit var categoryName: String
     private lateinit var subCategoryName: String
     private var hasImage: Boolean = false
@@ -76,8 +76,9 @@ class AddProductActivity : AppCompatActivity() {
     private var productUploaded = false
     private var imageUploaded = false
     private lateinit var specsBlankList: ArrayList<String>
-    private lateinit var specsAdapter: SpecsAdapter
+    private lateinit var specsRegistrationAdapter: SpecsRegistrationAdapter
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_product)
@@ -88,16 +89,26 @@ class AddProductActivity : AppCompatActivity() {
 
         specsHolder.visibility = View.GONE
 
-        currentUser = intent.getSerializableExtra("currentUser") as User
-        categoryName = intent.getStringExtra("categoryName") as String
-        subCategoryName = intent.getStringExtra("subCategoryName") as String
-        selectedStore = intent.getSerializableExtra("selectedStore") as Store
         isEdit = intent.getBooleanExtra("isEdit", false)
+        currentUser = intent.getSerializableExtra("currentUser") as User
+        if (!isEdit) {
+            categoryName = intent.getStringExtra("categoryName") as String
+            subCategoryName = intent.getStringExtra("subCategoryName") as String
+            selectedStore = intent.getSerializableExtra("selectedStore") as Store
+        }
 
         specsBlankList = ArrayList()
-        specsAdapter = SpecsAdapter(specsBlankList, this, currentUser)
+        specsRegistrationAdapter = SpecsRegistrationAdapter(specsBlankList, this, currentUser, isEdit)
         specsRv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        specsRv.adapter = specsAdapter
+        specsRv.adapter = specsRegistrationAdapter
+
+        if (isEdit) {
+            reviewSwitchHolder.visibility = View.GONE
+            addProduct.text = "Update Product"
+            productToEdit = intent.getSerializableExtra("selectedProduct") as Product
+            Log.d(TAG,"Product to edit data -> " + Gson().toJson(productToEdit))
+            fillViews()
+        }
 
         specs.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -109,7 +120,7 @@ class AddProductActivity : AppCompatActivity() {
 
         addSpec.setOnClickListener {
             specsBlankList.add("")
-            specsAdapter.notifyItemInserted(specsBlankList.size - 1)
+            specsRegistrationAdapter.notifyItemInserted(specsBlankList.size - 1)
         }
 
         writeReview.setOnCheckedChangeListener { _, isChecked ->
@@ -120,7 +131,9 @@ class AddProductActivity : AppCompatActivity() {
             }
         }
 
-        productImageCV.visibility = View.GONE
+        if (!isEdit) {
+            productImageCV.visibility = View.GONE
+        }
 
         addImage.setOnClickListener {
             val imageLoaderDialog = ImageLoaderDialog(this)
@@ -140,20 +153,69 @@ class AddProductActivity : AppCompatActivity() {
         }
 
         addProduct.setOnClickListener {
-            product = Product()
-
-            if (name.text.isNullOrEmpty() || description.text.isNullOrEmpty()
-                || price.text.isNullOrEmpty()) {
-                Toast.makeText(this, "One or more fields are empty", Toast.LENGTH_SHORT).show()
-            } else if (!hasImage) {
-                Toast.makeText(this, "Product has no image", Toast.LENGTH_SHORT).show()
-            } else if (!appendProductSpecData() && specs.isChecked) {
-                Toast.makeText(this, "Spec fields can not be empty", Toast.LENGTH_SHORT).show()
+            if (!isEdit) {
+                product = Product()
+                if (name.text.isNullOrEmpty() || description.text.isNullOrEmpty()
+                    || price.text.isNullOrEmpty()
+                ) {
+                    Toast.makeText(this, "One or more fields are empty", Toast.LENGTH_SHORT).show()
+                } else if (!hasImage) {
+                    Toast.makeText(this, "Product has no image", Toast.LENGTH_SHORT).show()
+                } else if (!appendProductSpecData(product) && specs.isChecked) {
+                    Toast.makeText(this, "Spec fields can not be empty", Toast.LENGTH_SHORT).show()
+                } else {
+                    EventBus.getDefault().post(ButtonPressedEvent().also {
+                        it.buttonId = Buttons.BTN_ADD_PRODUCT
+                    })
+                }
             } else {
-                EventBus.getDefault().post(ButtonPressedEvent().also {
-                    it.buttonId = Buttons.BTN_ADD_PRODUCT
-                })
+
             }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun fillViews() {
+        name.setText(productToEdit.name)
+        description.setText(productToEdit.description)
+        price.setText(productToEdit.price.toString())
+        manufacturer.setText(productToEdit.manufacturer)
+        model.setText(productToEdit.model)
+        specs.isChecked = productToEdit.specTitles.isNotEmpty()
+        if (productToEdit.hasImage) {
+            productImageCV.visibility = View.VISIBLE
+            tv_add_image.text = "Change Image"
+            tv_add_image.isAllCaps = true
+
+            iv_add_image.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.reload))
+            Glide.with(this).load(DBLinks.productImageLargeUrl(productToEdit.id, productToEdit.imageId)).into(productImage)
+        }
+        if (productToEdit.specTitles.isNotEmpty()) {
+            specsHolder.visibility = View.VISIBLE
+            val t = productToEdit.specTitles.split("!_!")
+            val s = productToEdit.specs.split("!_!")
+
+            specsRegistrationAdapter.specTitles.addAll(t)
+            specsRegistrationAdapter.specs.addAll(s)
+
+            for (index in t.indices) {
+                specsBlankList.add("")
+                specsRegistrationAdapter.notifyItemInserted(index)
+            }
+
+            specsRv.adapter = specsRegistrationAdapter
+            Log.d(TAG, "Specs adapter item count -> " + specsRegistrationAdapter.itemCount)
+            Log.d(TAG, "Specs rv child count -> " + specsRv.childCount)
+
+            /*for (index in t.indices) {
+                val child = specsRv.getChildAt(index)
+
+                val specTitle: MaterialEditText = child.findViewById(R.id.met_spec_title)
+                val spec: MaterialEditText = child.findViewById(R.id.met_spec)
+
+                specTitle.setText(t[index])
+                spec.setText(s[index])
+            }*/
         }
     }
 
@@ -183,6 +245,7 @@ class AddProductActivity : AppCompatActivity() {
         specsHolder = findViewById(R.id.rl_product_specs_holder)
         specsRv = findViewById(R.id.rv_product_specs)
         addSpec = findViewById(R.id.rl_add_product_spec)
+        reviewSwitchHolder = findViewById(R.id.rl_review_switch_holder)
     }
 
     override fun onDestroy() {
@@ -285,7 +348,7 @@ class AddProductActivity : AppCompatActivity() {
         product.addedByName = currentUser.firstName + " " + currentUser.lastName
     }
 
-    private fun appendProductSpecData(): Boolean {
+    private fun appendProductSpecData(product: Product): Boolean {
         val specBuilder = StringBuilder()
         val specTitleBuilder = StringBuilder()
         if (specsBlankList.size == 0) {

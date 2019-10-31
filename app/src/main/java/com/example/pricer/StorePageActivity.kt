@@ -1,6 +1,7 @@
 package com.example.pricer
 
 import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pricer.adapters.ProductAdapter
 import com.example.pricer.constants.Actions
 import com.example.pricer.constants.ObjectType
+import com.example.pricer.constants.RequestCodes
 import com.example.pricer.events.GetResponseEvent
 import com.example.pricer.events.RegisterEvent
 import com.example.pricer.models.Product
@@ -105,6 +107,21 @@ class StorePageActivity : AppCompatActivity() {
                     runOnUiThread {
                         Toast.makeText(this, "There was a problem", Toast.LENGTH_SHORT).show()
                     }
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == RequestCodes.PRODUCT_PAGE_REQ_CODE) {
+            if (data != null) {
+                val index = data.getIntExtra("index", -1)
+                val product = data.getSerializableExtra("product") as Product
+
+                if (index > -1) {
+                    featuredProducts[index] = product
+                    runOnUiThread { featuredProductsAdapter.notifyItemChanged(index) }
                 }
             }
         }
