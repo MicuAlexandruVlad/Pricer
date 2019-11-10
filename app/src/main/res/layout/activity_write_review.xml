@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:paddingBottom="16dp"
+    tools:context=".WriteReviewActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_title"
+        android:text="Write a review"
+        android:textStyle="bold"
+        android:textSize="@dimen/title_size"
+        android:textColor="@color/md_black"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="30dp"
+        tools:ignore="HardcodedText" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fl_review"
+        android:layout_below="@id/tv_title"
+        android:visibility="visible">
+
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/frag_review"
+            class="com.example.pricer.fragments.ReviewFragment"
+            />
+
+    </FrameLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_post_review"
+        android:text="Post review"
+        android:textColor="@color/md_white"
+        android:background="@drawable/btn_round_product_accent"
+        android:textSize="16sp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
+        tools:ignore="HardcodedText" />
+
+</RelativeLayout>

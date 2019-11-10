@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
+    android:animateLayoutChanges="true"
     tools:context=".ProductPageActivity">
 
     <ScrollView
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:clipToPadding="false"
-            android:paddingBottom="16dp"
+
             >
 
             <androidx.cardview.widget.CardView
@@ -134,6 +134,18 @@
                         android:rating="3.5"
                         />
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/tv_num_reviews"
+                        android:textSize="15sp"
+                        android:textColor="@color/md_black"
+                        tools:text="(24)"
+                        android:layout_centerVertical="true"
+                        android:layout_toEndOf="@id/rb_product_rating"
+                        android:layout_marginStart="12dp"
+                        />
+
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -229,21 +241,111 @@
 
             </RelativeLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rl_product_reviews_holder"
+                android:background="@color/md_white"
+                android:layout_marginTop="-40dp"
+                android:translationZ="6dp"
+                android:elevation="2dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_3"
+                    android:text="Reviews"
+                    android:textColor="@color/md_black"
+                    android:textSize="18sp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="56dp"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rv_product_reviews"
+                    android:layout_below="@id/tv_3"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:nestedScrollingEnabled="false"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rv_product_reviews"
+                    android:id="@+id/tv_read_more"
+                    android:textColor="@color/md_light_blue_500"
+                    android:text="Read more"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:textAllCaps="true"
+                    android:layout_centerHorizontal="true"
+                    android:textAlignment="center"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="16dp"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
         </LinearLayout>
 
     </ScrollView>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_menu_holder"
+        android:visibility="invisible"
+        android:layout_above="@id/fab_menu"
+        android:layout_alignParentEnd="true"
+        android:orientation="vertical"
+        android:clipToPadding="false"
+        android:animateLayoutChanges="true"
+        android:clipChildren="true"
+        >
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fab_review_product"
+            app:backgroundTint="@color/productAccent"
+            app:borderWidth="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/review"
+            android:tint="@color/md_white"
+            />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fab_edit_product"
+            app:backgroundTint="@color/productAccent"
+            app:borderWidth="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/edit"
+            android:tint="@color/md_white"
+            />
+
+    </LinearLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/fab_edit_product"
+        android:id="@+id/fab_menu"
         app:backgroundTint="@color/productAccent"
         app:borderWidth="0dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
-        android:src="@drawable/edit"
+        android:src="@drawable/menu_to_close"
         android:tint="@color/md_white"
         />
 

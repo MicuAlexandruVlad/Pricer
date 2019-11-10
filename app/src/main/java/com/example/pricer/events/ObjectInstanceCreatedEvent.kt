@@ -7,4 +7,6 @@ class ObjectInstanceCreatedEvent {
     var action: Int = -1
 
     var product: Product? = null
+    var productIndex: Int = -1
+    var imageChanged: Boolean = false
 }

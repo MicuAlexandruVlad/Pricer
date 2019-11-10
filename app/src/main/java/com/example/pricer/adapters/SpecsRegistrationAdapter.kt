@@ -37,7 +37,7 @@ class SpecsRegistrationAdapter(private var blankList: ArrayList<String>,
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = blankList[position]
 
-        if (isEdit) {
+        if (isEdit && position < specTitles.size) {
             holder.title.setText(specTitles[position])
             holder.spec.setText(specs[position])
         }

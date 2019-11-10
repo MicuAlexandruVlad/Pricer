@@ -16,12 +16,16 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.signature.ObjectKey
 import com.example.pricer.adapters.SpecsRegistrationAdapter
 import com.example.pricer.constants.*
 import com.example.pricer.dialogs.ImageLoaderDialog
 import com.example.pricer.events.ButtonPressedEvent
 import com.example.pricer.events.ObjectInstanceCreatedEvent
 import com.example.pricer.events.RegisterEvent
+import com.example.pricer.events.UpdateEvent
 import com.example.pricer.models.Product
 import com.example.pricer.models.Review
 import com.example.pricer.models.Store
@@ -36,6 +40,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.lang.StringBuilder
+import java.util.*
+import kotlin.collections.ArrayList
 
 class AddProductActivity : AppCompatActivity() {
 
@@ -69,12 +75,16 @@ class AddProductActivity : AppCompatActivity() {
     private lateinit var categoryName: String
     private lateinit var subCategoryName: String
     private var hasImage: Boolean = false
+    private var imageChanged: Boolean = false
     private lateinit var encodedImageSm: String
     private lateinit var encodedImageLg: String
     private var isEdit: Boolean = false
     private var reviewUploaded = false
     private var productUploaded = false
     private var imageUploaded = false
+    private var productUpdated = false
+    private var imageUpdated = false
+    private var productIndex = -1
     private lateinit var specsBlankList: ArrayList<String>
     private lateinit var specsRegistrationAdapter: SpecsRegistrationAdapter
 
@@ -106,6 +116,7 @@ class AddProductActivity : AppCompatActivity() {
             reviewSwitchHolder.visibility = View.GONE
             addProduct.text = "Update Product"
             productToEdit = intent.getSerializableExtra("selectedProduct") as Product
+            productIndex = intent.getIntExtra("index", -1)
             Log.d(TAG,"Product to edit data -> " + Gson().toJson(productToEdit))
             fillViews()
         }
@@ -156,8 +167,7 @@ class AddProductActivity : AppCompatActivity() {
             if (!isEdit) {
                 product = Product()
                 if (name.text.isNullOrEmpty() || description.text.isNullOrEmpty()
-                    || price.text.isNullOrEmpty()
-                ) {
+                    || price.text.isNullOrEmpty()) {
                     Toast.makeText(this, "One or more fields are empty", Toast.LENGTH_SHORT).show()
                 } else if (!hasImage) {
                     Toast.makeText(this, "Product has no image", Toast.LENGTH_SHORT).show()
@@ -169,7 +179,24 @@ class AddProductActivity : AppCompatActivity() {
                     })
                 }
             } else {
+                if (name.text.isNullOrEmpty() || description.text.isNullOrEmpty()
+                    || price.text.isNullOrEmpty()) {
+                    Toast.makeText(this, "One or more fields are empty", Toast.LENGTH_SHORT).show()
+                } else if (!appendProductSpecData(productToEdit) && specs.isChecked) {
+                    Toast.makeText(this, "Spec fields can not be empty", Toast.LENGTH_SHORT).show()
+                } else {
+                    productToEdit.name = name.text.toString()
+                    productToEdit.description = description.text.toString()
+                    productToEdit.price = price.text.toString().toDouble()
+                    productToEdit.manufacturer = manufacturer.text.toString()
+                    productToEdit.model = model.text.toString()
 
+                    // TODO: also update the lastEditedBy field (not implemented from testing purposes)
+
+                    productToEdit.historicalPrices += productToEdit.price.toString() + "!_!"
+                    ApiCalls.updateProductImage(this, encodedImageSm, encodedImageLg, productToEdit.id)
+                    ApiCalls.updateProductData(this, productToEdit)
+                }
             }
         }
     }
@@ -188,7 +215,11 @@ class AddProductActivity : AppCompatActivity() {
             tv_add_image.isAllCaps = true
 
             iv_add_image.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.reload))
-            Glide.with(this).load(DBLinks.productImageLargeUrl(productToEdit.id, productToEdit.imageId)).into(productImage)
+            Glide.with(this)
+                .load(DBLinks.productImageLargeUrl(productToEdit.id, productToEdit.imageId))
+                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
+                .signature(ObjectKey(productToEdit.productImageSignature))
+                .into(productImage)
         }
         if (productToEdit.specTitles.isNotEmpty()) {
             specsHolder.visibility = View.VISIBLE
@@ -206,16 +237,6 @@ class AddProductActivity : AppCompatActivity() {
             specsRv.adapter = specsRegistrationAdapter
             Log.d(TAG, "Specs adapter item count -> " + specsRegistrationAdapter.itemCount)
             Log.d(TAG, "Specs rv child count -> " + specsRv.childCount)
-
-            /*for (index in t.indices) {
-                val child = specsRv.getChildAt(index)
-
-                val specTitle: MaterialEditText = child.findViewById(R.id.met_spec_title)
-                val spec: MaterialEditText = child.findViewById(R.id.met_spec)
-
-                specTitle.setText(t[index])
-                spec.setText(s[index])
-            }*/
         }
     }
 
@@ -273,6 +294,55 @@ class AddProductActivity : AppCompatActivity() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onProductUpdated(updateEvent: UpdateEvent) {
+        if (updateEvent.status == HttpStatus.SC_OK) {
+            when (updateEvent.objType) {
+                ObjectType.OBJ_PRODUCT -> {
+                    if (updateEvent.action == Actions.PRODUCT_DATA_UPDATED) {
+                        productUpdated = true
+                    }
+                }
+
+                ObjectType.OBJ_PRODUCT_IMAGE -> {
+                    if (updateEvent.action == Actions.PRODUCT_IMAGE_UPDATED) {
+                        imageUpdated = true
+                    }
+                }
+            }
+            if (imageChanged) {
+                if (productUpdated && imageUpdated) {
+                    Log.d(TAG, "Product and image uploaded")
+                    showProductUpdatedDialog()
+                }
+            } else {
+                if (productUpdated) {
+                    Log.d(TAG, "Product uploaded")
+                    showProductUpdatedDialog()
+                }
+            }
+
+        } else {
+            // TODO: when changing the image this triggers even though the image is being overwritten
+            Toast.makeText(this, "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showProductUpdatedDialog() {
+        val builder = AlertDialog.Builder(this)
+            .setTitle("Product Updated")
+            .setMessage(getString(R.string.product_updated))
+            .setNeutralButton("OK") { dialogInterface, _ ->
+                // notifies any subscribed activity that the user has added a new product
+                emitObjectInstanceCreatedEvent(Actions.PRODUCT_DATA_UPDATED, productToEdit)
+                dialogInterface.dismiss()
+                finish()
+            }
+
+        builder.create()
+        builder.show()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRegisterEvent(registerEvent: RegisterEvent) {
         if (registerEvent.status == HttpStatus.SC_CREATED) {
             when (registerEvent.objType) {
@@ -304,7 +374,7 @@ class AddProductActivity : AppCompatActivity() {
             .setMessage(getString(R.string.product_uploaded))
             .setNeutralButton("OK") { dialogInterface, _ ->
                 // notifies any subscribed activity that the user has added a new product
-                emitObjectInstanceCreatedEvent()
+                emitObjectInstanceCreatedEvent(Actions.PRODUCT_CREATED, product)
                 dialogInterface.dismiss()
                 finish()
             }
@@ -313,11 +383,15 @@ class AddProductActivity : AppCompatActivity() {
         builder.show()
     }
 
-    private fun emitObjectInstanceCreatedEvent() {
+    private fun emitObjectInstanceCreatedEvent(action: Int, product: Product) {
         val objectInstanceCreatedEvent = ObjectInstanceCreatedEvent()
-        objectInstanceCreatedEvent.action = Actions.PRODUCT_CREATED
+        objectInstanceCreatedEvent.action = action
         objectInstanceCreatedEvent.objectType = ObjectType.OBJ_PRODUCT
         objectInstanceCreatedEvent.product = product
+        if (isEdit) {
+            objectInstanceCreatedEvent.productIndex = productIndex
+            objectInstanceCreatedEvent.imageChanged = imageChanged
+        }
 
         EventBus.getDefault().post(objectInstanceCreatedEvent)
     }
@@ -393,8 +467,12 @@ class AddProductActivity : AppCompatActivity() {
                 RequestCodes.GALLERY_REQ_CODE -> {
                     if (data != null) {
                         hasImage = true
+                        if (isEdit) {
+                            imageChanged = true
+                        }
 
                         productImageCV.visibility = View.VISIBLE
+                        productToEdit.productImageSignature = getUnixTime()
 
                         val uri = data.data
                         val bmp = MediaStore.Images.Media.getBitmap(contentResolver, uri)
@@ -414,5 +492,9 @@ class AddProductActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun getUnixTime(): String {
+        return Calendar.getInstance().timeInMillis.toString()
     }
 }

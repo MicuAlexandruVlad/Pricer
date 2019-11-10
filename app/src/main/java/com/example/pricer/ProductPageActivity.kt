@@ -13,24 +13,29 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.signature.ObjectKey
+import com.example.pricer.adapters.ReviewAdapter
 import com.example.pricer.adapters.SpecsDisplayAdapter
-import com.example.pricer.constants.Actions
-import com.example.pricer.constants.DBLinks
-import com.example.pricer.constants.ObjectType
+import com.example.pricer.constants.*
+import com.example.pricer.database.Repository
 import com.example.pricer.dialogs.PriceChangeDialog
-import com.example.pricer.events.UpdateEvent
+import com.example.pricer.events.*
 import com.example.pricer.models.Product
+import com.example.pricer.models.Review
 import com.example.pricer.models.Spec
 import com.example.pricer.models.User
 import com.example.pricer.utils.ApiCalls
+import com.example.pricer.utils.JsonUtils
 import com.example.pricer.utils.Styles
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.gson.Gson
 import cz.msebera.android.httpclient.HttpStatus
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -52,14 +57,23 @@ class ProductPageActivity : AppCompatActivity() {
     private lateinit var productDescription: TextView
     private lateinit var specsHolder: RelativeLayout
     private lateinit var specsRv: RecyclerView
+    private lateinit var menu: FloatingActionButton
+    private lateinit var menuHolder: LinearLayout
     private lateinit var edit: FloatingActionButton
+    private lateinit var review: FloatingActionButton
+    private lateinit var reviewRv: RecyclerView
+    private lateinit var numReviews: TextView
 
     private lateinit var currentUser: User
     private lateinit var product: Product
     private var isFavorite = false
+    private var isMenuOpen = false
     private lateinit var specList: ArrayList<Spec>
-    private lateinit var adapter: SpecsDisplayAdapter
+    private lateinit var specsDisplayAdapter: SpecsDisplayAdapter
+    private lateinit var reviewArray: ArrayList<Review>
+    private lateinit var reviewAdapter: ReviewAdapter
     private var index: Int = -1
+    private lateinit var repository: Repository
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,54 +85,26 @@ class ProductPageActivity : AppCompatActivity() {
         bindViews()
 
         specList = ArrayList()
+        reviewArray = ArrayList()
+
+        repository = Repository(this)
 
         currentUser = intent.getSerializableExtra("currentUser") as User
         product = intent.getSerializableExtra("selectedProduct") as Product
         index = intent.getIntExtra("index", -1)
         populateSpecList(product.specTitles, product.specs)
 
-        adapter = SpecsDisplayAdapter(specList, this, currentUser)
+        specsDisplayAdapter = SpecsDisplayAdapter(specList, this, currentUser)
         specsRv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        specsRv.adapter = adapter
+        specsRv.adapter = specsDisplayAdapter
 
-        productName.text = product.name
-        productPrice.text = "$ " + product.price
-        if (product.description.isEmpty()) {
-            descriptionHolder.visibility = View.GONE
-        } else {
-            productDescription.text = product.description
-        }
+        reviewAdapter = ReviewAdapter(reviewArray, this, currentUser)
+        reviewRv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        reviewRv.adapter = reviewAdapter
 
-        if (product.specTitles.isEmpty()) {
-            specsHolder.visibility = View.GONE
-        } else {
-            specsHolder.visibility = View.VISIBLE
-        }
+        initViews(true)
 
-        Glide.with(this)
-            .load(DBLinks.productImageLargeUrl(product.id, product.imageId))
-            .listener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    return true
-                }
-
-                override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    dataSource: DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    productImage.setImageDrawable(resource!!)
-                    window.statusBarColor = Styles.getColorFromImage(this@ProductPageActivity, productImage)
-                    return true
-                }
-            }).submit()
+        ApiCalls.getReviews(this, 5, false, product.id)
 
         priceHolder.setOnClickListener {
             val priceChangeDialog = PriceChangeDialog(this)
@@ -156,12 +142,35 @@ class ProductPageActivity : AppCompatActivity() {
             isFavorite = !isFavorite
         }
 
+        menu.setOnClickListener {
+            val closeToMenu = AnimatedVectorDrawableCompat.create(this, R.drawable.close_to_menu)
+            val menuToClose = AnimatedVectorDrawableCompat.create(this, R.drawable.menu_to_close)
+            menu.setImageDrawable(menuToClose)
+            if (isMenuOpen) {
+                menuHolder.visibility = View.GONE
+                menu.setImageDrawable(closeToMenu)
+                closeToMenu!!.start()
+            } else {
+                menuHolder.visibility = View.VISIBLE
+                menu.setImageDrawable(menuToClose)
+                menuToClose!!.start()
+            }
+
+            isMenuOpen = !isMenuOpen
+        }
+
         edit.setOnClickListener {
             val intent = Intent(this, AddProductActivity::class.java)
             intent.putExtra("isEdit", true)
             intent.putExtra("selectedProduct", product)
             intent.putExtra("currentUser", currentUser)
+            intent.putExtra("index", index)
             startActivity(intent)
+        }
+
+        review.setOnClickListener {
+            val intent = Intent(this, WriteReviewActivity::class.java)
+            startActivityForResult(intent, RequestCodes.WRITE_REVIEW_REQ_CODE)
         }
     }
 
@@ -175,6 +184,25 @@ class ProductPageActivity : AppCompatActivity() {
             spec.spec = s[index]
 
             specList.add(spec)
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onGetResponseEvent(getResponseEvent: GetResponseEvent) {
+        when (getResponseEvent.objType) {
+            ObjectType.OBJ_REVIEW -> {
+                when (getResponseEvent.action) {
+                    Actions.REVIEWS_RECEIVED -> {
+                        if (getResponseEvent.status == HttpStatus.SC_OK) {
+                            val array = getResponseEvent.jsonResponseArray
+
+                            reviewArray.addAll(JsonUtils.jsonArrayToReviewArray(array))
+                            reviewAdapter.notifyDataSetChanged()
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -193,6 +221,137 @@ class ProductPageActivity : AppCompatActivity() {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onProductDataChanged(objectInstanceCreatedEvent: ObjectInstanceCreatedEvent) {
+        // Product data has been changed by the user - this comes from AddProductActivity
+        if (objectInstanceCreatedEvent.objectType == ObjectType.OBJ_PRODUCT
+            && objectInstanceCreatedEvent.action == Actions.PRODUCT_DATA_UPDATED) {
+            product = objectInstanceCreatedEvent.product!!
+            initViews(objectInstanceCreatedEvent.imageChanged)
+
+            specList.clear()
+            populateSpecList(product.specTitles, product.specs)
+            specsDisplayAdapter.notifyDataSetChanged()
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onButtonPressedEvent(buttonPressedEvent: ButtonPressedEvent) {
+        when (buttonPressedEvent.objType) {
+            ObjectType.OBJ_REVIEW -> {
+                when (buttonPressedEvent.buttonId) {
+                    Buttons.BTN_LIKE_REVIEW -> {
+                        Log.d(TAG, "Liked review at index -> " + buttonPressedEvent.index)
+
+                        val likedReview = reviewArray[buttonPressedEvent.index]
+
+                        Thread {
+                            repository.insertReview(likedReview)
+                        }.start()
+                        // send liked review to socket
+
+                        ApiCalls.postLikedReviewToSocket(this, likedReview)
+                    }
+
+                    Buttons.BTN_DISLIKE_REVIEW -> {
+                        Log.d(TAG, "Disliked review at index -> " + buttonPressedEvent.index)
+
+                        val dislikedReview = reviewArray[buttonPressedEvent.index]
+
+                        Thread {
+                            repository.deleteReview(dislikedReview)
+                        }.start()
+
+                        ApiCalls.postDislikedReviewToSocket(this, dislikedReview)
+                    }
+                }
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun initViews(loadImage: Boolean) {
+        productName.text = product.name
+        productPrice.text = "$ " + product.price
+        numReviews.text = "(" + product.reviewCount + ")"
+        productRating.rating = product.rating.toFloat()
+        if (product.description.isEmpty()) {
+            descriptionHolder.visibility = View.GONE
+        } else {
+            productDescription.text = product.description
+        }
+
+        if (product.specTitles.isEmpty()) {
+            specsHolder.visibility = View.GONE
+        } else {
+            specsHolder.visibility = View.VISIBLE
+        }
+
+        if (loadImage) {
+            Glide.with(this)
+                .load(DBLinks.productImageLargeUrl(product.id, product.imageId))
+                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
+                .signature(ObjectKey(product.productImageSignature))
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        return true
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        productImage.setImageDrawable(resource!!)
+                        window.statusBarColor = Styles.getColorFromImage(this@ProductPageActivity, productImage)
+                        return true
+                    }
+                }).submit()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RequestCodes.WRITE_REVIEW_REQ_CODE && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                // upload review
+
+                val review = data.getSerializableExtra("review") as Review
+                review.productId = product.id
+                review.isForStore = false
+                review.isForProduct = true
+                review.addedById = currentUser.id
+                review.likes = 0
+                review.addedByName = currentUser.firstName + " " + currentUser.lastName
+
+                ApiCalls.uploadReview(this, review, false)
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRegisterEvent(registerEvent: RegisterEvent) {
+        if (registerEvent.objType == ObjectType.OBJ_REVIEW
+            && registerEvent.action == Actions.REVIEW_UPLOADED) {
+            when (registerEvent.status) {
+                HttpStatus.SC_CREATED -> {
+                    Toast.makeText(this, "Review uploaded", Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    Toast.makeText(this, "There was a problem", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     private fun bindViews() {
         productImage = findViewById(R.id.iv_product_image)
         productName = findViewById(R.id.tv_product_name)
@@ -205,7 +364,12 @@ class ProductPageActivity : AppCompatActivity() {
         productDescription = findViewById(R.id.tv_product_description)
         specsHolder = findViewById(R.id.rl_product_specs_holder)
         specsRv = findViewById(R.id.rv_product_specs)
+        menu = findViewById(R.id.fab_menu)
+        menuHolder = findViewById(R.id.ll_menu_holder)
         edit = findViewById(R.id.fab_edit_product)
+        review = findViewById(R.id.fab_review_product)
+        reviewRv = findViewById(R.id.rv_product_reviews)
+        numReviews = findViewById(R.id.tv_num_reviews)
     }
 
     override fun onDestroy() {

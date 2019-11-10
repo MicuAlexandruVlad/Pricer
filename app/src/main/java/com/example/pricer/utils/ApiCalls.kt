@@ -7,11 +7,16 @@ import com.example.pricer.constants.Actions
 import com.example.pricer.constants.DBLinks
 import com.example.pricer.constants.ObjectType
 import com.example.pricer.events.GetResponseEvent
+import com.example.pricer.events.SocketEvents
 import com.example.pricer.events.UpdateEvent
 import com.example.pricer.models.Product
 import com.example.pricer.models.Review
 import com.example.pricer.models.Store
 import com.example.pricer.models.User
+import com.github.nkzawa.emitter.Emitter
+import com.github.nkzawa.socketio.client.IO
+import com.github.nkzawa.socketio.client.Socket
+import com.google.gson.Gson
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.JsonHttpResponseHandler
 import com.loopj.android.http.RequestParams
@@ -19,6 +24,7 @@ import cz.msebera.android.httpclient.Header
 import cz.msebera.android.httpclient.HttpStatus
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
+import java.net.URISyntaxException
 
 class ApiCalls {
     companion object {
@@ -343,7 +349,7 @@ class ApiCalls {
 
         }
 
-        fun uploadReview(context: Context, review: Review) {
+        fun uploadReview(context: Context, review: Review, isUploadedWithProduct: Boolean) {
             val client = AsyncHttpClient()
             val params = RequestParams()
 
@@ -351,12 +357,19 @@ class ApiCalls {
             params.put("productId", review.productId)
             params.put("rating", review.rating)
             params.put("text", review.text)
+            params.put("likes", review.likes)
             params.put("isForStore", review.isForStore)
             params.put("isForProduct", review.isForProduct)
             params.put("addedById", review.addedById)
             params.put("addedByName", review.addedByName)
 
-            client.post(DBLinks.registerReview, params, object : JsonHttpResponseHandler() {
+            val url = if (isUploadedWithProduct) {
+                DBLinks.registerReview
+            } else {
+                DBLinks.registerNewReview
+            }
+
+            client.post(url, params, object : JsonHttpResponseHandler() {
                 override fun onSuccess(
                     statusCode: Int,
                     headers: Array<out Header>?,
@@ -370,6 +383,73 @@ class ApiCalls {
                     registerEvent.objType = ObjectType.OBJ_REVIEW
 
                     emitRegisterEvent(registerEvent)
+                }
+            })
+        }
+
+        fun getReviews(context: Context, limit: Int, isForStore: Boolean, id: String) {
+            val client = AsyncHttpClient()
+            val params = RequestParams()
+
+            params.put("limit", limit)
+            params.put("id", id)
+            params.put("isForStore", isForStore)
+
+            client.get(DBLinks.getReviews, params, object : JsonHttpResponseHandler() {
+                override fun onSuccess(
+                    statusCode: Int,
+                    headers: Array<out Header>?,
+                    response: JSONObject?
+                ) {
+                    super.onSuccess(statusCode, headers, response)
+
+                    Log.d(TAG, "getReviews: response -> $response")
+
+                    val getResponseEvent = GetResponseEvent()
+                    getResponseEvent.status = response!!.getInt("status")
+                    getResponseEvent.action = Actions.REVIEWS_RECEIVED
+                    getResponseEvent.objType = ObjectType.OBJ_REVIEW
+                    getResponseEvent.jsonResponseArray = response.getJSONArray("reviews")
+
+                    emitGetResponseEvent(getResponseEvent)
+                }
+            })
+        }
+
+        fun postLikedReviewToSocket(context: Context, review: Review) {
+            val client = AsyncHttpClient()
+            val params = RequestParams()
+
+            params.put("reviewId", review.id)
+
+            client.post(DBLinks.likedReview, params, object : JsonHttpResponseHandler() {
+                override fun onSuccess(
+                    statusCode: Int,
+                    headers: Array<out Header>?,
+                    response: JSONObject?
+                ) {
+                    super.onSuccess(statusCode, headers, response)
+
+                    // TODO: if status is not ok display a toast
+                }
+            })
+        }
+
+        fun postDislikedReviewToSocket(context: Context, review: Review) {
+            val client = AsyncHttpClient()
+            val params = RequestParams()
+
+            params.put("reviewId", review.id)
+
+            client.post(DBLinks.dislikedReview, params, object : JsonHttpResponseHandler() {
+                override fun onSuccess(
+                    statusCode: Int,
+                    headers: Array<out Header>?,
+                    response: JSONObject?
+                ) {
+                    super.onSuccess(statusCode, headers, response)
+
+
                 }
             })
         }
@@ -431,7 +511,7 @@ class ApiCalls {
 
                     if (hasReview && registerEvent.status == HttpStatus.SC_CREATED && review != null) {
                         review.productId = registerEvent.id
-                        uploadReview(context, review)
+                        uploadReview(context, review, true)
                     }
 
                     if (product.hasImage) {
@@ -515,6 +595,60 @@ class ApiCalls {
             })
         }
 
+        fun updateProductData(context: Context, product: Product) {
+            val client = AsyncHttpClient()
+            val params = JsonUtils.productToRequestParams(product)
+
+            client.post(DBLinks.updateProductData, params, object : JsonHttpResponseHandler() {
+                override fun onSuccess(
+                    statusCode: Int,
+                    headers: Array<out Header>?,
+                    response: JSONObject?
+                ) {
+                    super.onSuccess(statusCode, headers, response)
+
+                    Log.d(TAG, "updateProductData: response -> $response")
+
+                    val updateEvent = UpdateEvent()
+                    updateEvent.action = Actions.PRODUCT_DATA_UPDATED
+                    updateEvent.objType = ObjectType.OBJ_PRODUCT
+                    updateEvent.status = response!!.getInt("status")
+
+                    emitUpdateEvent(updateEvent)
+                }
+            })
+        }
+
+        fun updateProductImage(context: Context, imageSm: String, imageLg: String, productId: String) {
+            val client = AsyncHttpClient()
+            val params = RequestParams()
+
+            params.put("productId", productId)
+            params.put("encodedImageSm", imageSm)
+            params.put("encodedImageLg", imageLg)
+
+            client.post(DBLinks.updateProductImage, params, object : JsonHttpResponseHandler() {
+                override fun onSuccess(
+                    statusCode: Int,
+                    headers: Array<out Header>?,
+                    response: JSONObject?
+                ) {
+                    super.onSuccess(statusCode, headers, response)
+
+                    Log.d(TAG, "updateProductImage: response -> $response")
+
+                    val status = response!!.getInt("status")
+
+                    val updateEvent = UpdateEvent()
+                    updateEvent.action = Actions.PRODUCT_IMAGE_UPDATED
+                    updateEvent.objType = ObjectType.OBJ_PRODUCT_IMAGE
+                    updateEvent.status = status
+
+                    emitUpdateEvent(updateEvent)
+                }
+            })
+        }
+
         fun getFeaturedProducts(context: Context, storeId: String, limit: Int) {
             val client = AsyncHttpClient()
             val params = RequestParams()
@@ -561,6 +695,20 @@ class ApiCalls {
 
         private fun emitUpdateEvent(updateEvent: UpdateEvent) {
             EventBus.getDefault().post(updateEvent)
+        }
+
+        private fun connectToReviewSocket(): Socket? {
+            try {
+                return IO.socket(DBLinks.reviewSocketLink)
+            } catch (e: URISyntaxException) {
+                e.printStackTrace()
+            }
+            return null
+        }
+
+        private fun disconnectFromReviewSocket(socket: Socket) {
+            socket.emit(SocketEvents.MANUAL_DISCONNECT, "user disconnected")
+            //socket.disconnect()
         }
     }
 }

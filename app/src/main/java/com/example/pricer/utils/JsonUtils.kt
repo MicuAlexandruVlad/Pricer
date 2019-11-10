@@ -1,8 +1,10 @@
 package com.example.pricer.utils
 
 import com.example.pricer.models.Product
+import com.example.pricer.models.Review
 import com.example.pricer.models.Store
 import com.example.pricer.models.StoreBrand
+import com.loopj.android.http.RequestParams
 import org.json.JSONArray
 
 class JsonUtils {
@@ -76,8 +78,60 @@ class JsonUtils {
                     product.lastEditedById = obj.getString("lastEditedById")
                     product.lastEditedByName = obj.getString("lastEditedByName")
                     product.hasImage = obj.getBoolean("hasImage")
+                    product.productImageSignature = obj.getString("productImageSignature")
 
                     it.add(product)
+                }
+            }
+        }
+
+        fun productToRequestParams(product: Product): RequestParams {
+            return RequestParams().also {
+                it.put("id", product.id)
+                it.put("storeId", product.storeId)
+                it.put("imageId", product.imageId)
+                it.put("name", product.name)
+                it.put("description", product.description)
+                it.put("price", product.price)
+                it.put("manufacturer", product.manufacturer)
+                it.put("model", product.model)
+                it.put("categoryName", product.categoryName)
+                it.put("subCategoryName", product.subCategoryName)
+                it.put("rating", product.rating)
+                it.put("reviewCount", product.reviewCount)
+                it.put("historicalPrices", product.historicalPrices)
+                it.put("hasImage", product.hasImage)
+                it.put("specTitles", product.specTitles)
+                it.put("specs", product.specs)
+                it.put("clicks", product.clicks)
+                it.put("follows", product.follows)
+                it.put("addedById", product.addedById)
+                it.put("addedByName", product.addedByName)
+                it.put("lastEditedById", product.lastEditedById)
+                it.put("lastEditedByName", product.lastEditedByName)
+                it.put("productImageSignature", product.productImageSignature)
+            }
+        }
+
+        fun jsonArrayToReviewArray(array: JSONArray): ArrayList<Review> {
+            return ArrayList<Review>().also {
+                for (index in 0 until array.length()) {
+                    val obj = array.getJSONObject(index)
+                    val review = Review()
+
+                    review.id = obj.getString("_id")
+                    review.storeId = obj.getString("storeId")
+                    review.productId = obj.getString("productId")
+                    review.rating = obj.getDouble("rating")
+                    review.text = obj.getString("text")
+                    review.likes = obj.getInt("likes")
+                    review.isForProduct = obj.getBoolean("isForProduct")
+                    review.isForStore = obj.getBoolean("isForStore")
+                    review.addedById = obj.getString("addedById")
+                    review.addedByName = obj.getString("addedByName")
+                    review.addedOn = obj.getString("createdAt")
+
+                    it.add(review)
                 }
             }
         }

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:clipToPadding="false"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/cv_user_first_letter"
+        app:cardCornerRadius="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_user_first_letter"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_centerInParent="true"
+                tools:text="T"
+                />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="16dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rl_top_holder">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_user_name"
+                android:layout_centerVertical="true"
+                tools:text="Trevor Mathews"
+                android:layout_toStartOf="@id/tv_review_time"
+                android:layout_alignParentStart="true"
+                android:textColor="@color/md_black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_review_time"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                tools:text="2 days ago"
+                android:textSize="14sp"
+                android:textColor="@color/md_grey_500"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rb_rating"
+                android:progressTint="@color/productAccent"
+                android:progressBackgroundTint="@color/productPrimaryDark"
+                android:secondaryProgressTint="@color/productAccent"
+                android:numStars="5"
+                android:rating="4.5"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_marginTop="4dp"
+                android:layout_centerVertical="true"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_rating"
+                android:layout_toEndOf="@id/rb_rating"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="8dp"
+                android:textSize="15sp"
+                android:textColor="@color/productAccent"
+                tools:text="4.5"
+                android:textStyle="bold"
+                />
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_review_text"
+            tools:text="This product was really good overall. I'm quite pleased."
+            android:layout_marginTop="8dp"
+            android:textSize="16sp"
+            android:textColor="@color/md_grey_700"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:id="@+id/tv_review_likes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@id/rl_review_favorite"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:textColor="@color/productAccent"
+                android:textSize="16sp"
+                android:layout_marginEnd="8dp"
+                tools:text="24" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rl_review_favorite"
+                android:layout_alignParentEnd="true"
+                android:padding="8dp"
+                >
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:id="@+id/iv_review_favorite"
+                    android:src="@drawable/heart_outline"
+                    android:tint="@color/productAccent"
+                    />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

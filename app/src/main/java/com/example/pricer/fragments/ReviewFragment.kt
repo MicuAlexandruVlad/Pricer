@@ -56,7 +56,8 @@ class ReviewFragment: Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onReviewReceived(buttonPressedEvent: ButtonPressedEvent) {
-        if (buttonPressedEvent.buttonId == Buttons.BTN_ADD_PRODUCT) {
+        if (buttonPressedEvent.buttonId == Buttons.BTN_ADD_PRODUCT
+            || buttonPressedEvent.buttonId == Buttons.BTN_POST_REVIEW) {
             val review = Review()
             review.rating = ratingBar.rating.toDouble()
             review.text = reviewText.text.toString()

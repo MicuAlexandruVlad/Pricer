@@ -15,6 +15,9 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.signature.ObjectKey
 import com.example.pricer.*
 import com.example.pricer.constants.DBLinks
 import com.example.pricer.constants.RequestCodes
@@ -45,7 +48,11 @@ class ProductAdapter(private var products: ArrayList<Product>,
 
         if (product.hasImage) {
             val url = DBLinks.productImageLargeUrl(product.id, product.imageId)
-            Glide.with(context).load(url).into(holder.productImage)
+            Glide.with(context)
+                .load(url)
+                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
+                .signature(ObjectKey(product.productImageSignature))
+                .into(holder.productImage)
         }
 
         holder.productName.text = product.name

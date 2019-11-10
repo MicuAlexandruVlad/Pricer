@@ -33,4 +33,6 @@ class Product: Serializable {
     var lastEditedById: String = ""
     var lastEditedByName: String = ""
 
+    var productImageSignature: String = ""
+
 }
