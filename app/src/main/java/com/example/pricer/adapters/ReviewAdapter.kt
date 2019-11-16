@@ -59,6 +59,10 @@ class ReviewAdapter(private var reviewList: ArrayList<Review>,
             holder.reviewText.visibility = View.GONE
         }
 
+        if (review.isFavorite) {
+            holder.like.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.heart_filled))
+        }
+
         holder.like.setOnClickListener {
             review.isFavorite = !review.isFavorite
             val buttonPressedEvent = ButtonPressedEvent()

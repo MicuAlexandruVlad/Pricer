@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/md_white"
     android:animateLayoutChanges="true"
     tools:context=".ProductPageActivity">
 
@@ -54,17 +55,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/rl_product_name_holder"
-                android:background="@drawable/layout_bottom_round"
-                android:layout_marginTop="-40dp"
-                android:translationZ="9dp"
-                android:elevation="2dp"
+                android:layout_marginTop="24dp"
                 >
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/rl_name_price_holder"
-                    android:layout_marginTop="64dp"
                     android:clipToPadding="false"
                     >
 
@@ -118,7 +115,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/rl_name_price_holder"
-                    android:layout_marginBottom="24dp"
                     >
 
                     <RatingBar
@@ -176,10 +172,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/rl_product_description_holder"
-                android:background="@drawable/layout_bottom_round"
-                android:layout_marginTop="-40dp"
-                android:translationZ="8dp"
-                android:elevation="2dp">
+                android:layout_marginTop="20dp"
+                >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -189,7 +183,6 @@
                     android:textColor="@color/md_black"
                     android:textSize="18sp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="56dp"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 
@@ -201,7 +194,7 @@
                     android:textSize="16sp"
                     android:textColor="@color/md_black"
                     android:layout_marginStart="16dp"
-                    android:layout_marginBottom="24dp"
+
                     android:layout_marginTop="12dp"
                     android:layout_marginEnd="16dp"
                     />
@@ -212,10 +205,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/rl_product_specs_holder"
-                android:background="@drawable/layout_bottom_round"
-                android:layout_marginTop="-40dp"
-                android:translationZ="7dp"
-                android:elevation="2dp">
+                android:layout_marginTop="16dp"
+                >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -225,7 +216,6 @@
                     android:textColor="@color/md_black"
                     android:textSize="18sp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="56dp"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 
@@ -241,14 +231,42 @@
 
             </RelativeLayout>
 
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/fl_graph"
+                android:layout_marginTop="16dp"
+                >
+
+                <fragment
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/frag_graph"
+                    class="com.example.pricer.fragments.PriceGraphFragment"
+                    />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_detailed_graph"
+                android:textColor="@color/md_light_blue_500"
+                android:text="View detailed graph"
+                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textAllCaps="true"
+                android:textAlignment="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="16dp"
+                tools:ignore="HardcodedText" />
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/rl_product_reviews_holder"
-                android:background="@color/md_white"
-                android:layout_marginTop="-40dp"
-                android:translationZ="6dp"
-                android:elevation="2dp">
+                android:layout_marginTop="16dp"
+                >
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -258,7 +276,6 @@
                     android:textColor="@color/md_black"
                     android:textSize="18sp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="56dp"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 

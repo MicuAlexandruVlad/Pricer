@@ -194,6 +194,8 @@ class AddProductActivity : AppCompatActivity() {
                     // TODO: also update the lastEditedBy field (not implemented from testing purposes)
 
                     productToEdit.historicalPrices += productToEdit.price.toString() + "!_!"
+                    productToEdit.priceChangeDates += Calendar.getInstance().time.toString() + "!_!"
+
                     ApiCalls.updateProductImage(this, encodedImageSm, encodedImageLg, productToEdit.id)
                     ApiCalls.updateProductData(this, productToEdit)
                 }
@@ -412,6 +414,7 @@ class AddProductActivity : AppCompatActivity() {
         product.description = description.text.toString()
         product.price = price.text.toString().toDouble()
         product.historicalPrices = price.text.toString() + "!_!"
+        product.priceChangeDates = Calendar.getInstance().time.toString() + "!_!"
         product.manufacturer = manufacturer.text.toString()
         product.model = model.text.toString()
         product.categoryName = categoryName

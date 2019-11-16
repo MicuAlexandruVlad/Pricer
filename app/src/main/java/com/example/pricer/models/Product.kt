@@ -18,6 +18,7 @@ class Product: Serializable {
     var rating: Double = -1.0
     var reviewCount = 0
     var historicalPrices: String = ""
+    var priceChangeDates: String = ""
     var hasImage: Boolean = false
     var specTitles: String = ""
     var specs: String = ""

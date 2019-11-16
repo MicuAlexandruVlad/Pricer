@@ -26,20 +26,22 @@ import com.example.pricer.adapters.ReviewAdapter
 import com.example.pricer.adapters.SpecsDisplayAdapter
 import com.example.pricer.constants.*
 import com.example.pricer.database.Repository
+import com.example.pricer.database.RoomQueries
 import com.example.pricer.dialogs.PriceChangeDialog
 import com.example.pricer.events.*
-import com.example.pricer.models.Product
-import com.example.pricer.models.Review
-import com.example.pricer.models.Spec
-import com.example.pricer.models.User
+import com.example.pricer.models.*
 import com.example.pricer.utils.ApiCalls
 import com.example.pricer.utils.JsonUtils
 import com.example.pricer.utils.Styles
+import com.example.pricer.utils.TimeUtils
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import cz.msebera.android.httpclient.HttpStatus
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.doAsync
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ProductPageActivity : AppCompatActivity() {
     companion object {
@@ -63,6 +65,8 @@ class ProductPageActivity : AppCompatActivity() {
     private lateinit var review: FloatingActionButton
     private lateinit var reviewRv: RecyclerView
     private lateinit var numReviews: TextView
+    private lateinit var readMore: TextView
+    private lateinit var detailedGraph: TextView
 
     private lateinit var currentUser: User
     private lateinit var product: Product
@@ -94,6 +98,14 @@ class ProductPageActivity : AppCompatActivity() {
         index = intent.getIntExtra("index", -1)
         populateSpecList(product.specTitles, product.specs)
 
+        broadcastPriceGraphData()
+
+        val objectInstanceCreatedEvent = ObjectInstanceCreatedEvent()
+        objectInstanceCreatedEvent.action = Actions.SEND_PRODUCT_DATA
+        objectInstanceCreatedEvent.objectType = ObjectType.OBJ_PRODUCT
+        objectInstanceCreatedEvent.product = product
+        EventBus.getDefault().post(objectInstanceCreatedEvent)
+
         specsDisplayAdapter = SpecsDisplayAdapter(specList, this, currentUser)
         specsRv.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         specsRv.adapter = specsDisplayAdapter
@@ -106,22 +118,31 @@ class ProductPageActivity : AppCompatActivity() {
 
         ApiCalls.getReviews(this, 5, false, product.id)
 
-        priceHolder.setOnClickListener {
-            val priceChangeDialog = PriceChangeDialog(this)
-            priceChangeDialog.create()
-            priceChangeDialog.show()
 
-            priceChangeDialog.setOnDismissListener {
-                if (priceChangeDialog.donePressed) {
-                    // Update product price
-                    product.historicalPrices += priceChangeDialog.newValue.toString() + "!_!"
-                    product.price = priceChangeDialog.newValue
-                    productPrice.text = "$ " + priceChangeDialog.newValue
+        // TODO: TESTING ----> delete the ! after testing is over
+        if (!currentUser.isGuest) {
+            // Guest user doesn't have access to writing reviews or editing product data
+            menu.visibility = View.GONE
+        } else {
+            priceHolder.setOnClickListener {
+                val priceChangeDialog = PriceChangeDialog(this)
+                priceChangeDialog.create()
+                priceChangeDialog.show()
 
-                    ApiCalls.updateProductPrice(this, product)
+                priceChangeDialog.setOnDismissListener {
+                    if (priceChangeDialog.donePressed) {
+                        // Update product price
+                        product.historicalPrices += priceChangeDialog.newValue.toString() + "!_!"
+                        product.priceChangeDates += Calendar.getInstance().time.toString() + "!_!"
+                        product.price = priceChangeDialog.newValue
+                        productPrice.text = "$ " + priceChangeDialog.newValue
+
+                        ApiCalls.updateProductPrice(this, product)
+                    }
                 }
             }
         }
+
 
         favorite.setOnClickListener {
             if (!isFavorite) {
@@ -172,6 +193,22 @@ class ProductPageActivity : AppCompatActivity() {
             val intent = Intent(this, WriteReviewActivity::class.java)
             startActivityForResult(intent, RequestCodes.WRITE_REVIEW_REQ_CODE)
         }
+
+        readMore.setOnClickListener {
+            // TODO: launch an activity that shows all the reviews
+            val intent = Intent(this, ReadReviewsActivity::class.java)
+            intent.putExtra("currentUser", currentUser)
+            intent.putExtra("product", product)
+
+            startActivity(intent)
+        }
+
+        detailedGraph.setOnClickListener {
+            val intent = Intent(this, DetailedPriceGraphActivity::class.java)
+            intent.putExtra("product", product)
+
+            startActivity(intent)
+        }
     }
 
     private fun populateSpecList(specTitles: String, specs: String) {
@@ -197,8 +234,10 @@ class ProductPageActivity : AppCompatActivity() {
                         if (getResponseEvent.status == HttpStatus.SC_OK) {
                             val array = getResponseEvent.jsonResponseArray
 
-                            reviewArray.addAll(JsonUtils.jsonArrayToReviewArray(array))
+                            reviewArray.addAll(TimeUtils.formatReviewTime(JsonUtils.jsonArrayToReviewArray(array)))
                             reviewAdapter.notifyDataSetChanged()
+
+                            RoomQueries.setLikedReviews(this, reviewArray, reviewAdapter)
                         }
                     }
                 }
@@ -245,9 +284,9 @@ class ProductPageActivity : AppCompatActivity() {
 
                         val likedReview = reviewArray[buttonPressedEvent.index]
 
-                        Thread {
+                        doAsync {
                             repository.insertReview(likedReview)
-                        }.start()
+                        }
                         // send liked review to socket
 
                         ApiCalls.postLikedReviewToSocket(this, likedReview)
@@ -258,9 +297,9 @@ class ProductPageActivity : AppCompatActivity() {
 
                         val dislikedReview = reviewArray[buttonPressedEvent.index]
 
-                        Thread {
-                            repository.deleteReview(dislikedReview)
-                        }.start()
+                        doAsync {
+                            repository.deleteReview(dislikedReview.id)
+                        }
 
                         ApiCalls.postDislikedReviewToSocket(this, dislikedReview)
                     }
@@ -352,6 +391,18 @@ class ProductPageActivity : AppCompatActivity() {
         }
     }
 
+    private fun broadcastPriceGraphData() {
+        val priceChangeArray = ArrayList<PriceChange>().also {
+            it.addAll(JsonUtils.priceDataToPriceChangeArray(product.historicalPrices, product.priceChangeDates))
+        }
+        val objectInstanceCreatedEvent = ObjectInstanceCreatedEvent()
+        objectInstanceCreatedEvent.action = Actions.SEND_PRODUCT_DATA
+        objectInstanceCreatedEvent.objectType = ObjectType.OBJ_PRICE_CHANGE_ARRAY
+        objectInstanceCreatedEvent.priceChangeArray = priceChangeArray
+
+        EventBus.getDefault().post(objectInstanceCreatedEvent)
+    }
+
     private fun bindViews() {
         productImage = findViewById(R.id.iv_product_image)
         productName = findViewById(R.id.tv_product_name)
@@ -370,6 +421,8 @@ class ProductPageActivity : AppCompatActivity() {
         review = findViewById(R.id.fab_review_product)
         reviewRv = findViewById(R.id.rv_product_reviews)
         numReviews = findViewById(R.id.tv_num_reviews)
+        readMore = findViewById(R.id.tv_read_more)
+        detailedGraph = findViewById(R.id.tv_detailed_graph)
     }
 
     override fun onDestroy() {

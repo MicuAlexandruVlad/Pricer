@@ -18,7 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".WriteReviewActivity"></activity>
+        <activity android:name=".DetailedPriceGraphActivity"></activity>
+        <activity android:name=".ReadReviewsActivity" />
+        <activity android:name=".WriteReviewActivity" />
         <activity android:name=".ProductPageActivity" />
         <activity android:name=".StorePageActivity" />
         <activity android:name=".StoreSearchActivity" />

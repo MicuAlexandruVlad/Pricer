@@ -1,14 +1,15 @@
 package com.example.pricer.utils
 
-import com.example.pricer.models.Product
-import com.example.pricer.models.Review
-import com.example.pricer.models.Store
-import com.example.pricer.models.StoreBrand
+import android.util.Log
+import com.example.pricer.models.*
 import com.loopj.android.http.RequestParams
 import org.json.JSONArray
+import kotlin.math.floor
+import kotlin.math.round
 
 class JsonUtils {
     companion object {
+        const val TAG = "JsonUtils"
         fun jsonToStoreArray(array: JSONArray): ArrayList<Store> {
             return ArrayList<Store>().also {
                 for (index in 0 until array.length()) {
@@ -69,6 +70,7 @@ class JsonUtils {
                     product.rating = obj.getDouble("rating")
                     product.reviewCount = obj.getInt("reviewCount")
                     product.historicalPrices = obj.getString("historicalPrices")
+                    product.priceChangeDates = obj.getString("priceChangeDates")
                     product.specTitles = obj.getString("specTitles")
                     product.specs = obj.getString("specs")
                     product.clicks = obj.getLong("clicks").toFloat()
@@ -100,6 +102,7 @@ class JsonUtils {
                 it.put("rating", product.rating)
                 it.put("reviewCount", product.reviewCount)
                 it.put("historicalPrices", product.historicalPrices)
+                it.put("priceChangeDates", product.priceChangeDates)
                 it.put("hasImage", product.hasImage)
                 it.put("specTitles", product.specTitles)
                 it.put("specs", product.specs)
@@ -133,6 +136,31 @@ class JsonUtils {
 
                     it.add(review)
                 }
+            }
+        }
+
+        fun priceDataToPriceChangeArray(historicalPrices: String, priceChangeDates: String): ArrayList<PriceChange> {
+            return ArrayList<PriceChange>().also {
+                val priceArray = historicalPrices.split("!_!")
+                val dateArray = priceChangeDates.split("!_!")
+                Log.d(TAG, "priceDataToPriceChangeArray: size -> ${priceArray.size}")
+                for (index in 0 until priceArray.size - 1) {
+                    val priceChange = PriceChange()
+                    priceChange.price = priceArray[index].toDouble()
+                    priceChange.date = dateArray[index]
+                    when {
+                        index == 0 -> priceChange.percentage = 0.0
+                        index > 0 -> {
+                            priceChange.percentage = floor(((priceChange.price - it[index - 1].price)
+                                    / it[index - 1].price) * 1000) / 10
+                        }
+                    }
+
+                    Log.d(TAG,"price change -> ${priceChange.percentage}")
+                    it.add(priceChange)
+                }
+
+                TimeUtils.formatPriceChangeTime(it)
             }
         }
     }

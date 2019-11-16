@@ -14,5 +14,7 @@ class Actions {
         const val PRODUCT_DATA_UPDATED = 10
         const val PRODUCT_IMAGE_UPDATED = 11
         const val REVIEWS_RECEIVED = 12
+        const val REVIEWS_RECEIVED_NO_LIMIT = 13
+        const val SEND_PRODUCT_DATA = 14
     }
 }

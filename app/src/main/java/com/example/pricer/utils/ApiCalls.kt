@@ -416,6 +416,33 @@ class ApiCalls {
             })
         }
 
+        fun getReviewsNoLimit(context: Context, isForStore: Boolean, id: String) {
+            val client = AsyncHttpClient()
+            val params = RequestParams()
+
+            params.put("id", id)
+            params.put("isForStore", isForStore)
+
+            client.get(DBLinks.getReviewsNoLimit, params, object : JsonHttpResponseHandler() {
+                override fun onSuccess(
+                    statusCode: Int,
+                    headers: Array<out Header>?,
+                    response: JSONObject?
+                ) {
+                    super.onSuccess(statusCode, headers, response)
+
+                    val getResponseEvent = GetResponseEvent()
+
+                    getResponseEvent.action = Actions.REVIEWS_RECEIVED_NO_LIMIT
+                    getResponseEvent.objType = ObjectType.OBJ_REVIEW
+                    getResponseEvent.status = response!!.getInt("status")
+                    getResponseEvent.jsonResponseArray = response.getJSONArray("reviews")
+
+                    emitGetResponseEvent(getResponseEvent)
+                }
+            })
+        }
+
         fun postLikedReviewToSocket(context: Context, review: Review) {
             val client = AsyncHttpClient()
             val params = RequestParams()
@@ -477,6 +504,7 @@ class ApiCalls {
             params.put("rating", product.rating)
             params.put("reviewCount", product.reviewCount)
             params.put("historicalPrices", product.historicalPrices)
+            params.put("priceChangeDates", product.priceChangeDates)
             params.put("specTitles", product.specTitles)
             params.put("specs", product.specs)
             params.put("clicks", product.clicks)
@@ -573,6 +601,7 @@ class ApiCalls {
 
             params.put("price", product.price)
             params.put("historicalPrices", product.historicalPrices)
+            params.put("priceChangeDates", product.priceChangeDates)
             params.put("id", product.id)
 
             client.post(DBLinks.updateProductPrice, params, object : JsonHttpResponseHandler() {

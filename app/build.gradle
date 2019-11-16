@@ -49,6 +49,9 @@ dependencies {
     implementation "androidx.room:room-rxjava2:$room_version"
     implementation "androidx.room:room-guava:$room_version"
     implementation 'com.github.nkzawa:socket.io-client:0.6.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0"
+    implementation 'org.jetbrains.anko:anko:0.10.8'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
     implementation 'commons-io:commons-io:2.6'
     testImplementation 'junit:junit:4.12'

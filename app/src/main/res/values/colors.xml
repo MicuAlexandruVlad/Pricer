@@ -25,7 +25,8 @@
     <!-->Store ripple colors<-->
     <color name="storeAccentRipple">#FFA187</color>
 
-
+    <color name="priceIncrease">#F02D3A</color>
+    <color name="priceDrop">@color/colorAccent</color>
 
     <color name="heartRed">#BA1F33</color>
 
