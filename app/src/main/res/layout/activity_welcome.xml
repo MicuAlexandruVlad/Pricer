@@ -79,11 +79,41 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rl_remember_me"
+                android:layout_below="@id/til_password"
+                android:layout_marginTop="12dp"
+                android:layout_centerHorizontal="true"
+                >
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/cb_remember_me"
+                    android:layout_marginEnd="12dp"
+                    android:layout_centerVertical="true"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_remember_me"
+                    android:text="Remember me"
+                    android:layout_toEndOf="@id/cb_remember_me"
+                    android:layout_centerVertical="true"
+                    android:textSize="16sp"
+                    android:textColor="@color/md_grey_600"
+                    tools:ignore="HardcodedText" />
+
+            </RelativeLayout>
+
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/btn_sign_in"
-                android:layout_below="@id/til_password"
+                android:layout_below="@id/rl_remember_me"
                 android:layout_marginTop="24dp"
                 android:text="Sign in"
                 android:textSize="16sp"

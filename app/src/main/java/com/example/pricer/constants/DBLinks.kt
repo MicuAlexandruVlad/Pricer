@@ -5,6 +5,7 @@ class DBLinks {
         private const val baseLink: String = "http://192.168.0.19:3000/"
         const val reviewSocketLink: String = "http://192.168.0.19:4000/"
         const val registerUserEmail: String = baseLink + "users/register-user-email/"
+        const val authUser: String = baseLink + "users/login-email/"
         const val registerStore: String = baseLink + "stores/register-store/"
         const val uploadStoreImage: String = baseLink + "store-images/upload-store-image/"
         const val searchStoreGroupName: String = baseLink + "stores/search-store-brand-group-name/"
@@ -27,6 +28,7 @@ class DBLinks {
         const val updateProductData: String = baseLink + "products/update-product-data/"
         const val featuredProducts: String = baseLink + "products/featured-products/"
         const val productDeals: String = baseLink + "products/product-deals/"
+        const val getFavoriteProducts: String = baseLink + "products/favorite/"
         const val recentlyAddedProducts: String = baseLink + "products/recently-added-products/"
 
         fun storeImageLargeUrl(storeId: String, storeImageId: String): String {

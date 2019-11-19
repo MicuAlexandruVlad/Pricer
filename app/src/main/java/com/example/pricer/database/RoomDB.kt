@@ -4,13 +4,24 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.pricer.dao.ProductDAO
 import com.example.pricer.dao.ReviewDAO
+import com.example.pricer.dao.StoreDAO
+import com.example.pricer.dao.UserDAO
+import com.example.pricer.models.Product
 import com.example.pricer.models.Review
+import com.example.pricer.models.Store
+import com.example.pricer.models.User
 
-@Database(entities = [Review::class], version = 1, exportSchema = false)
+@Database(entities = [Review::class, Product::class, User::class, Store::class],
+    version = 1,
+    exportSchema = false)
 public abstract class RoomDB : RoomDatabase() {
 
     abstract fun reviewDao(): ReviewDAO
+    abstract fun productDao(): ProductDAO
+    abstract fun userDao():UserDAO
+    abstract fun storeDao(): StoreDAO
 
     companion object {
         // Singleton prevents multiple instances of database opening at the
@@ -27,7 +38,7 @@ public abstract class RoomDB : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     RoomDB::class.java,
-                    "test1"
+                    "test3"
                 ).build()
                 INSTANCE = instance
                 return instance

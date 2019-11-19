@@ -44,7 +44,7 @@ class ProductsFragment : Fragment() {
         }*/
 
         changeFragment.setOnClickListener {
-            parentPager.setCurrentItem(0, true)
+            parentPager.setCurrentItem(1, true)
         }
 
         addProduct.setOnClickListener {

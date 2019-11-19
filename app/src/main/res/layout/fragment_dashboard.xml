@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/md_white"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/rl_loading"
+            android:visibility="gone"
+            >
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:id="@+id/rl_header">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:id="@+id/iv_forward"
+                android:src="@drawable/forward_arrow"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:tint="@color/colorAccent"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:id="@+id/tv_title"
+                android:textSize="24sp"
+                android:textColor="@color/md_black"
+                android:textStyle="bold"
+                android:text="Dashboard"
+                tools:ignore="HardcodedText" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_my_added_stores"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:text="My Stores"
+            android:textColor="@color/md_black"
+            android:textSize="20sp"
+            android:textStyle="normal"
+            tools:ignore="HardcodedText" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rv_my_added_stores"
+            android:layout_marginTop="12dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_my_added_products"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:text="My Products"
+            android:textColor="@color/md_black"
+            android:textSize="20sp"
+            android:textStyle="normal"
+            tools:ignore="HardcodedText" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rv_my_added_products"
+            android:layout_marginTop="12dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_favorite_products"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:text="Favorite Products"
+            android:textColor="@color/md_black"
+            android:textSize="20sp"
+            android:textStyle="normal"
+            tools:ignore="HardcodedText" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/rv_favorite_products"
+            android:layout_marginTop="12dp"
+            />
+
+    </LinearLayout>
+
+</ScrollView>

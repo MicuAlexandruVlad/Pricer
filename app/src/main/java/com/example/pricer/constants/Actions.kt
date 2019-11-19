@@ -16,5 +16,7 @@ class Actions {
         const val REVIEWS_RECEIVED = 12
         const val REVIEWS_RECEIVED_NO_LIMIT = 13
         const val SEND_PRODUCT_DATA = 14
+        const val FAVORITE_PRODUCTS_RECEIVED = 15
+        const val USER_AUTH = 16
     }
 }

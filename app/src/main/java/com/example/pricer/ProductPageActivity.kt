@@ -2,6 +2,7 @@ package com.example.pricer
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
@@ -35,6 +36,7 @@ import com.example.pricer.utils.JsonUtils
 import com.example.pricer.utils.Styles
 import com.example.pricer.utils.TimeUtils
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.gson.Gson
 import cz.msebera.android.httpclient.HttpStatus
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -92,6 +94,7 @@ class ProductPageActivity : AppCompatActivity() {
         reviewArray = ArrayList()
 
         repository = Repository(this)
+        queryAllProducts()
 
         currentUser = intent.getSerializableExtra("currentUser") as User
         product = intent.getSerializableExtra("selectedProduct") as Product
@@ -99,6 +102,7 @@ class ProductPageActivity : AppCompatActivity() {
         populateSpecList(product.specTitles, product.specs)
 
         broadcastPriceGraphData()
+        queryCurrentProduct(product, this)
 
         val objectInstanceCreatedEvent = ObjectInstanceCreatedEvent()
         objectInstanceCreatedEvent.action = Actions.SEND_PRODUCT_DATA
@@ -152,6 +156,11 @@ class ProductPageActivity : AppCompatActivity() {
                         R.drawable.heart_filled
                     )
                 )
+
+                doAsync {
+                    repository.insertProduct(product)
+                    Log.d(TAG, "Saved product with id -> ${product.id}")
+                }
             } else {
                 favoriteIv.setImageDrawable(
                     ContextCompat.getDrawable(
@@ -159,13 +168,20 @@ class ProductPageActivity : AppCompatActivity() {
                         R.drawable.heart_outline
                     )
                 )
+
+                doAsync {
+                    repository.deleteProduct(product.id)
+                    Log.d(TAG, "Removed product with id -> ${product.id}")
+                }
             }
             isFavorite = !isFavorite
         }
 
+        val closeToMenu = AnimatedVectorDrawableCompat.create(this, R.drawable.close_to_menu)
+        val menuToClose = AnimatedVectorDrawableCompat.create(this, R.drawable.menu_to_close)
+
         menu.setOnClickListener {
-            val closeToMenu = AnimatedVectorDrawableCompat.create(this, R.drawable.close_to_menu)
-            val menuToClose = AnimatedVectorDrawableCompat.create(this, R.drawable.menu_to_close)
+
             menu.setImageDrawable(menuToClose)
             if (isMenuOpen) {
                 menuHolder.visibility = View.GONE
@@ -181,6 +197,10 @@ class ProductPageActivity : AppCompatActivity() {
         }
 
         edit.setOnClickListener {
+            /*isMenuOpen = false
+            menuHolder.visibility = View.GONE
+            menu.setImageDrawable(closeToMenu)
+            closeToMenu!!.start()*/
             val intent = Intent(this, AddProductActivity::class.java)
             intent.putExtra("isEdit", true)
             intent.putExtra("selectedProduct", product)
@@ -190,6 +210,10 @@ class ProductPageActivity : AppCompatActivity() {
         }
 
         review.setOnClickListener {
+            /*isMenuOpen = false
+            menuHolder.visibility = View.GONE
+            menu.setImageDrawable(closeToMenu)
+            closeToMenu!!.start()*/
             val intent = Intent(this, WriteReviewActivity::class.java)
             startActivityForResult(intent, RequestCodes.WRITE_REVIEW_REQ_CODE)
         }
@@ -210,6 +234,27 @@ class ProductPageActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    private fun queryCurrentProduct(product: Product, context: Context) {
+        doAsync {
+            val p = repository.getProductForId(product.id)
+
+            // TODO: strange warning triggers here in the if statement
+            if (p.id.compareTo(product.id) == 0) {
+                runOnUiThread {
+                    favoriteIv.setImageDrawable(
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.heart_filled
+                        )
+                    )
+                    isFavorite = true
+                }
+            }
+        }
+    }
+
+
 
     private fun populateSpecList(specTitles: String, specs: String) {
         val size = specTitles.split("!_!").size
@@ -423,6 +468,14 @@ class ProductPageActivity : AppCompatActivity() {
         numReviews = findViewById(R.id.tv_num_reviews)
         readMore = findViewById(R.id.tv_read_more)
         detailedGraph = findViewById(R.id.tv_detailed_graph)
+    }
+
+    private fun queryAllProducts() {
+        doAsync {
+            val productArray = repository.getAllProducts()
+
+            Log.d(TAG, "Favorite products in db -> ${Gson().toJson(productArray)}")
+        }
     }
 
     override fun onDestroy() {

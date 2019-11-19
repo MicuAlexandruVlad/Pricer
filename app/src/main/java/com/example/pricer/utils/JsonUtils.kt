@@ -4,12 +4,25 @@ import android.util.Log
 import com.example.pricer.models.*
 import com.loopj.android.http.RequestParams
 import org.json.JSONArray
+import org.json.JSONObject
 import kotlin.math.floor
 import kotlin.math.round
 
 class JsonUtils {
     companion object {
         const val TAG = "JsonUtils"
+
+        fun jsonObjectToUser(jsonObject: JSONObject): User {
+            return User().also{
+                it.id = jsonObject.getString("_id")
+                it.email = jsonObject.getString("email")
+                it.firstName = jsonObject.getString("firstName")
+                it.lastName = jsonObject.getString("lastName")
+                it.city = jsonObject.getString("city")
+                it.country = jsonObject.getString("country")
+            }
+        }
+
         fun jsonToStoreArray(array: JSONArray): ArrayList<Store> {
             return ArrayList<Store>().also {
                 for (index in 0 until array.length()) {

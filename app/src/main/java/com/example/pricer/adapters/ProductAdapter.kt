@@ -59,6 +59,15 @@ class ProductAdapter(private var products: ArrayList<Product>,
         holder.productPrice.text = "$" + product.price
         holder.productPriceChange.text = "0%"
 
+        if (product.reviewCount == 0) {
+            holder.notRatedYet.visibility = View.VISIBLE
+        } else {
+            holder.rating.visibility = View.VISIBLE
+            holder.notRatedYet.visibility = View.GONE
+
+            holder.rating.rating = product.rating.toFloat()
+        }
+
         holder.productPriceChange.setTextColor(ContextCompat.getColor(context, R.color.md_white))
 
         holder.body.setOnClickListener {

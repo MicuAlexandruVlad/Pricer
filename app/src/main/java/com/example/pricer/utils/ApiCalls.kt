@@ -20,10 +20,12 @@ import com.google.gson.Gson
 import com.loopj.android.http.AsyncHttpClient
 import com.loopj.android.http.JsonHttpResponseHandler
 import com.loopj.android.http.RequestParams
+import com.loopj.android.http.SyncHttpClient
 import cz.msebera.android.httpclient.Header
 import cz.msebera.android.httpclient.HttpStatus
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
+import java.lang.StringBuilder
 import java.net.URISyntaxException
 
 class ApiCalls {
@@ -72,6 +74,32 @@ class ApiCalls {
                 ) {
                     super.onFailure(statusCode, headers, throwable, errorResponse)
                     Log.d(TAG, errorResponse.toString())
+                }
+            })
+        }
+
+        fun authUser(user: User) {
+            val client = AsyncHttpClient()
+            val params = RequestParams()
+
+            params.put("email", user.email)
+            params.put("password", user.password)
+
+            client.post(DBLinks.authUser, params, object : JsonHttpResponseHandler() {
+                override fun onSuccess(
+                    statusCode: Int,
+                    headers: Array<out Header>?,
+                    response: JSONObject?
+                ) {
+                    super.onSuccess(statusCode, headers, response)
+
+                    val responseEvent = GetResponseEvent()
+                    responseEvent.objType = ObjectType.OBJ_USER
+                    responseEvent.action = Actions.USER_AUTH
+                    responseEvent.status = response!!.getInt("status")
+                    responseEvent.jsonResponseObj = response.getJSONObject("user")
+
+                    emitGetResponseEvent(responseEvent)
                 }
             })
         }
@@ -711,6 +739,41 @@ class ApiCalls {
 
         fun getRecentlyAddedProducts(context: Context, storeId: String, limit: Int) {
 
+        }
+
+        fun getFavoriteProducts(context: Context, idArray: ArrayList<String>) {
+            val client = SyncHttpClient()
+            val params = RequestParams()
+
+            val builder = StringBuilder()
+            for (index in idArray.indices) {
+                if (index == idArray.size - 1) {
+                    builder.append(idArray[index])
+                } else {
+                    builder.append(idArray[index])
+                    builder.append("_")
+                }
+            }
+
+            params.put("ids", builder.toString())
+
+            client.get(DBLinks.getFavoriteProducts, params, object : JsonHttpResponseHandler() {
+                override fun onSuccess(
+                    statusCode: Int,
+                    headers: Array<out Header>?,
+                    response: JSONObject?
+                ) {
+                    super.onSuccess(statusCode, headers, response)
+
+                    val getResponseEvent = GetResponseEvent()
+                    getResponseEvent.jsonResponseArray = response!!.getJSONArray("result")
+                    getResponseEvent.status = response.getInt("status")
+                    getResponseEvent.objType = ObjectType.OBJ_PRODUCT
+                    getResponseEvent.action = Actions.FAVORITE_PRODUCTS_RECEIVED
+
+                    emitGetResponseEvent(getResponseEvent)
+                }
+            })
         }
 
 

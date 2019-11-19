@@ -27,6 +27,7 @@
                 android:id="@+id/tv_user_first_letter"
                 android:textSize="22sp"
                 android:textStyle="bold"
+                android:textColor="@color/md_black"
                 android:layout_centerInParent="true"
                 tools:text="T"
                 />

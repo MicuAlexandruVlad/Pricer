@@ -26,8 +26,9 @@ class MainActivity : AppCompatActivity() {
 
         val bundleProducts = Bundle()
         val bundleStores = Bundle()
+        val bundleDashboard = Bundle()
 
-        initAdapter(bundleProducts, bundleStores, currentUser)
+        initAdapter(bundleProducts, bundleStores, bundleDashboard, currentUser)
     }
 
     private fun bindViews() {
@@ -38,9 +39,10 @@ class MainActivity : AppCompatActivity() {
     private fun initAdapter(
         bundleProducts: Bundle,
         bundleStores: Bundle,
+        bundleDashboard: Bundle,
         user: User
     ) {
-        adapter = MainPagerAdapter(supportFragmentManager, bundleStores, bundleProducts, user)
+        adapter = MainPagerAdapter(supportFragmentManager, bundleStores, bundleProducts, bundleDashboard, user)
         pager.adapter = adapter
     }
 }

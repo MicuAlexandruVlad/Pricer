@@ -2,6 +2,7 @@ package com.example.pricer.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import com.example.pricer.constants.ObjectType
 import com.example.pricer.events.ButtonPressedEvent
 import com.example.pricer.models.Review
 import com.example.pricer.models.User
+import com.example.pricer.utils.Styles
 import com.rengwuxian.materialedittext.MaterialEditText
 import org.greenrobot.eventbus.EventBus
 
@@ -32,6 +34,7 @@ class ReviewAdapter(private var reviewList: ArrayList<Review>,
 
     var specTitles: ArrayList<String> = ArrayList()
     var specs: ArrayList<String> = ArrayList()
+    private val styles = Styles()
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         val view = LayoutInflater.from(p0.context).inflate(R.layout.review_list_item, p0, false)
@@ -54,6 +57,8 @@ class ReviewAdapter(private var reviewList: ArrayList<Review>,
         holder.reviewText.text = review.text
         holder.likes.text = review.likes.toString()
         holder.firstLetter.text = review.addedByName.first().toString()
+
+        styles.setRandomColor(holder.firstLetterHolder, holder.firstLetter)
 
         if (review.text.isEmpty()) {
             holder.reviewText.visibility = View.GONE

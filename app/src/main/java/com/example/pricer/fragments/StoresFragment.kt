@@ -1,6 +1,5 @@
 package com.example.pricer.fragments
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +13,7 @@ import com.example.pricer.SearchStoreActivity
 import com.example.pricer.constants.RequestCodes
 import com.example.pricer.models.User
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import org.jetbrains.anko.find
 
 class StoresFragment : Fragment() {
 
@@ -21,7 +21,8 @@ class StoresFragment : Fragment() {
         const val TAG = "StoresFragment"
     }
 
-    private lateinit var changeFragment: ImageView
+    private lateinit var forward: ImageView
+    private lateinit var back: ImageView
     private lateinit var searchStore: FloatingActionButton
 
     private lateinit var bundle: Bundle
@@ -39,8 +40,12 @@ class StoresFragment : Fragment() {
 
         bindViews(view)
 
-        changeFragment.setOnClickListener {
-            parentPager.setCurrentItem(1, true)
+        forward.setOnClickListener {
+            parentPager.setCurrentItem(2, true)
+        }
+
+        back.setOnClickListener {
+            parentPager.setCurrentItem(0, true)
         }
 
         searchStore.setOnClickListener {
@@ -54,7 +59,8 @@ class StoresFragment : Fragment() {
 
     private fun bindViews(view: View) {
         parentPager = activity!!.findViewById(R.id.pager)
-        changeFragment = view.findViewById(R.id.iv_forward)
+        forward = view.findViewById(R.id.iv_forward)
+        back = view.findViewById(R.id.iv_backward)
         searchStore = view.findViewById(R.id.fab_search_store)
     }
 }
